@@ -1,0 +1,76 @@
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #1e1e1e;
+    overflow: hidden;
+    vertical-align: middle;
+    display: flex;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  color: #f2f2f2;
+  text-align: center;
+  padding: 11px 16px;
+  padding-bottom: 0px;
+  text-decoration: none;
+}
+
+.topnav h1,
+.topnav h2,
+.topnav h3,
+.topnav h4,
+.topnav h5,
+.topnav h6,
+.topnav p {
+    color: white;
+    vertical-align: middle;
+}
+
+.topnav img {
+    vertical-align: middle;
+    display: inline-flex;
+    margin-top: 6px;
+    margin-bottom: 8px;
+    margin-left: 14px;
+    margin-right: 0px;
+}
+
+.logo_link a {
+    padding: 0px;
+    margin: 0px;
+}
+
+.topnav ul {
+    vertical-align: middle;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 10px;
+}
+
+.topnav li {
+    text-align: center;
+    display: inline; 
+    float: left;
+}
+
+.topnav li a {
+    display: block; 
+    padding-top: 13px;
+}
+
+.topnav li a:hover {
+    background-color: inherit;
+    color: red;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.title:hover {
+    color: white;
+    text-decoration: none;
+}

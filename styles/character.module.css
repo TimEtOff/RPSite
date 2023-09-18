@@ -1,0 +1,51 @@
+.title {
+    margin: 0 0 1rem;
+    line-height: 1.15;
+    font-size: 3.6rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.explications {
+  padding-top: 35px;
+  padding-bottom: 50px;
+  padding-left: 40px;
+  padding-right: 40px;
+  align-items: start;
+  justify-content: start;
+  display: inline;
+}
+
+.explications h1 {
+  padding-bottom: 15px;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.explications span {
+  color: red;
+  font-weight: 500;
+}
+
+.characters {
+  width: 30%;
+  height: 80vh;
+  background: #202020;
+  margin-top: 2.7%;
+  margin-left: -65%;
+  margin-bottom: 2.7%;
+  overflow-x: hidden;
+  overflow-y: auto; 
+  border-radius: 20px;
+}
+
+.character {
+  width: 90%;
+  height: 20%;
+  background: #303030;
+  margin-top: 5%;
+  margin-right: 5%;
+  margin-left: 5%;
+  border-radius: 20px;
+}
