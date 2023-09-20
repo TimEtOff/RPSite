@@ -5,9 +5,8 @@ import styles from "../styles/character.module.css"
 import styles2 from '../styles/Home.module.css';
 import Link from "next/link";
 import { Character } from "@/components/character/character";
-import { useCookies } from 'next-client-cookies';
+import { setCookie, getCookie, hasCookie } from 'cookies-next';
 
-// const cookies = useCookies();
 var json;
 var characters;
 
@@ -21,11 +20,13 @@ function getCharacters(id) {
     });
 }
 
-export async function getStaticProps() {
-//    var id = cookies.get("id");
+export async function getServerSideProps() {
+    setCookie('id', 'CjLPe8w8ls')
+    var id = getCookie('id');//  -> !hasCookie('id')
     var id = "CjLPe8w8ls";
+    console.log(id);
 
-    if (id === "") {
+    if (id==="" || id === undefined) {
         characters = [{id: "null", characterId: "null", character: new Character("Non", "connecté").toString()}]
     } else {
         // Call an external API endpoint to get posts
