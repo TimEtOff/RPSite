@@ -4,72 +4,46 @@ import Layout from "../components/layout";
 import styles from "../styles/character.module.css"
 import styles2 from '../styles/Home.module.css';
 import Link from "next/link";
-import cookieCutter from "cookie-cutter"
+import { Character } from "@/components/character/character";
+import { useCookies } from 'next-client-cookies';
 
-export default function CharacterPage() {
+// const cookies = useCookies();
+var json;
+var characters;
 
-    var json;
-    var characters;
+function getCharacters(id) {
+    return fetch((/*process.env.URL + */'http://localhost:3002/api/character/get-characters'), {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+    });
+}
 
-/*    async function getCharacters() {
+export async function getStaticProps() {
+//    var id = cookies.get("id");
+    var id = "CjLPe8w8ls";
 
-        var response = await fetch('http://localhost:3002/pages/api/character/new-character', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: "CjLPe8w8ls" }),
-        });
-
-        var newjson = await response.json();
-
-        console.log(newjson.message);
-        console.log(newjson.characters);
-        json = newjson;
-
-    } */
-
-    function getCharacters() {
-        return fetch('/api/character/new-character', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: "CjLPe8w8ls" }),
-        });
+    if (id === "") {
+        characters = [{id: "null", characterId: "null", character: new Character("Non", "connecté").toString()}]
+    } else {
+        // Call an external API endpoint to get posts
+        json = await (await getCharacters(id)).json();
+        characters = json.characters;
     }
-
-    function test() {
-        var updated = false;
-        console.log("Début");
-
-        (async function(){
-            json = await (await getCharacters()).json();
-            console.log("Milieu");
-            
-            updated = true;
-        })()
-
-        setTimeout(function(){
-            if (updated) {
-                console.log(json);
-                characters = json.characterId;
-                console.log(characters);
-                console.log("Fin");
-            }
-        }, 2000)
-        
-
+   
+    // By returning { props: { posts } }, the Blog component
+    // will receive `posts` as a prop at build time
+    return {
+      props: {
+        characters,
+      },
     }
+  }
 
-    
+export default function CharacterPage({ characters }) {
 
-    /*
-    {characters.map((character) => {
-                        return (<div>{}</div>)
-                    })
-                    }
-    */
     return (
         <Layout>
             <Head>
@@ -88,7 +62,16 @@ export default function CharacterPage() {
                 </AnimatedGradient>
 
                 <div className={styles.characters}>
-                    <button onClick={test}>TEEEEEEEEEEST PTN</button>
+                    {characters.map((character) => {
+                            return (
+                            <div key={character.characterId} className={styles.character}>
+                                <p>
+                                    {Character.getFromString(character.character).getFullName()}
+                                </p>
+                            </div>
+                            )
+                        })
+                    }
                     
                 </div>
             </main>
