@@ -2,12 +2,40 @@ import { useState, useEffect } from 'react'
 import { Character } from './character/character';
 import { setCookie, getCookie, hasCookie } from 'cookies-next';
 import styles from "../styles/components/character-list.module.css";
+import { useRouter } from 'next/router';
 
 export default function CharacterList() {
+    const router = useRouter();
 
-    function handleClick(param) {
+    function newCharacter() {
         return function (e) {
-            console.log(param);
+            if (hasCookie('id')) {
+                var id = getCookie('id');
+                fetch('/api/character/new-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: id })
+                })
+                router.reload();
+            }
+        }
+    }
+
+    function deleteCharacter(param) {
+        return function (e) {
+            if (hasCookie('id')) {
+                var id = getCookie('id');
+                fetch('/api/character/delete-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: id, characterId: param })
+                })
+                router.reload();
+            }
         }
     }
 
@@ -40,6 +68,10 @@ export default function CharacterList() {
 
     return (
         <div suppressHydrationWarning>
+            <button onClick={newCharacter()} className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-5 tw-mt-4">
+                Nouveau personnage
+            </button>
+
             { characters.map((character) => {
             return (
             <div key={character.characterId} className={styles.character} suppressHydrationWarning>
@@ -55,7 +87,7 @@ export default function CharacterList() {
                     </li>
 
                     <li>
-                        <button onClick={handleClick(character)} className="tw-bg-neutral-800 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-my-4">
+                        <button onClick={deleteCharacter(character.characterId)} className="tw-bg-neutral-800 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-my-4">
                             Supprimer
                         </button>
                     </li>

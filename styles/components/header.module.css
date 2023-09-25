@@ -54,7 +54,8 @@
     float: left;
 }
 
-.topnav li a {
+.topnav li a,
+.topnav li button {
     display: block; 
     padding-top: 13px;
 }

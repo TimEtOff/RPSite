@@ -20,7 +20,7 @@ export default function HeaderComponent() {
 
     function getConnectedOrNot() {
         if (id === "" || id == undefined) {
-            return "Non connecté"
+            return "Se connecter"
         } else {
             return "Connecté"
         }
@@ -44,7 +44,7 @@ export default function HeaderComponent() {
             <ul>
                 <li><Link href="/">Accueil</Link></li>
                 <li><Link href="/character">Personnages</Link></li>
-                <p suppressHydrationWarning >{ getConnectedOrNot() }</p>
+                <button suppressHydrationWarning className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-5 tw-mt-3">{ getConnectedOrNot() }</button>
             </ul>
     
         </div>
