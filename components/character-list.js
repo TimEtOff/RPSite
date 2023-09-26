@@ -4,7 +4,7 @@ import { setCookie, getCookie, hasCookie } from 'cookies-next';
 import styles from "../styles/components/character-list.module.css";
 import { useRouter } from 'next/router';
 
-export default function CharacterList() {
+export default function CharacterList({ editCharacter }) {
     const router = useRouter();
 
     function newCharacter() {
@@ -19,6 +19,8 @@ export default function CharacterList() {
                     body: JSON.stringify({ id: id })
                 })
                 router.reload();
+            } else {
+                alert("Vous n'êtes pas connecté")
             }
         }
     }
@@ -35,6 +37,8 @@ export default function CharacterList() {
                     body: JSON.stringify({ id: id, characterId: param })
                 })
                 router.reload();
+            } else {
+                alert("Vous n'êtes pas connecté")
             }
         }
     }
@@ -81,7 +85,7 @@ export default function CharacterList() {
 
                 <ul>
                     <li>
-                        <button className="tw-bg-neutral-800 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-my-4">
+                        <button onClick={editCharacter(character)} className="tw-bg-neutral-800 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-my-4">
                             Modifier
                         </button>
                     </li>

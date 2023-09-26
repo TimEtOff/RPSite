@@ -7,7 +7,6 @@ function deleteCharacter(id, characterId, objectData) {
     var i = 0;
     var updatedData = [];
 
-    console.log("ID: " + id + ", CharacterId: " + characterId);
     while (i != objectData.length) {
         var actualData = objectData[i]
         if (actualData.id == id) {

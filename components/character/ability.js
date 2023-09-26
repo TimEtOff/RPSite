@@ -1,18 +1,20 @@
+import { Character } from "./character";
+
 class Ability {
 
-    #name;
-    #level;
+    name;
+    level;
 
     constructor(name, level) {
-        this.#name = name;
-        this.#level = level;
+        this.name = name;
+        this.level = level;
     }
 
     toString() {
         return "Ability[" +
 
-                this.#name + "," +
-                this.#level +
+                this.name + "," +
+                this.level +
 
                 "]";
     }

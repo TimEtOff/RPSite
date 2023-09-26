@@ -1,13 +1,12 @@
 import { AbilityCategory } from "./ability-category";
 import { Ability } from "./ability";
-import { Talent } from "./talent";
 
 class Character {
 
-    #name;
-    #lastname;
-    #health = 4;
-    #energy = 4;
+    name;
+    lastname;
+    health = 4;
+    energy = 4;
 
     constitutionAbilities = new AbilityCategory(false, "Constitution", 0, [new Ability("Force", 0), new Ability("R\u00e9sistance", 0)]);
     mentalAbilities = new AbilityCategory(false, "Mental", 0, [new Ability("Intellect", 0), new Ability("Eloquence", 0)]);
@@ -15,13 +14,10 @@ class Character {
     survieAbilities = new AbilityCategory(false, "Survie", 0, [new Ability("Perception", 0), new Ability("Savoir-faire", 0)]);
     specialAbilities1 = new AbilityCategory(true, "", 0, [new Ability("", 0), new Ability("", 0), new Ability("", 0)]);
     specialAbilities2 = new AbilityCategory(true, "", 0, [new Ability("", 0), new Ability("", 0), new Ability("", 0)]);
-
-    talent1 = new Talent(0, "", Talent.TALENT_ABILITY.NULL);
-    talent2 = new Talent(0, "", Talent.TALENT_ABILITY.NULL);
     
     constructor(name, lastname) {
-        this.#name = name;
-        this.#lastname = lastname;
+        this.name = name;
+        this.lastname = lastname;
     }
 
     constructor2(name, lastname,
@@ -31,38 +27,32 @@ class Character {
         dexteriteAbilities,
         survieAbilities,
         specialAbilities1,
-        specialAbilities2,
-        talent1,
-        talent2) {
-            this.#name = name;
-            this.#lastname = lastname;
-            this.#health = health;
-            this.#energy = energy;
+        specialAbilities2,) {
+            this.name = name;
+            this.lastname = lastname;
+            this.health = health;
+            this.energy = energy;
             this.constitutionAbilities = constitutionAbilities;
             this.mentalAbilities = mentalAbilities;
             this.dexteriteAbilities = dexteriteAbilities;
             this.survieAbilities = survieAbilities;
             this.specialAbilities1 = specialAbilities1;
             this.specialAbilities2 = specialAbilities2;
-            this.talent1 = talent1;
-            this.talent2 = talent2;
         }
 
     toString() {
         return "Character[" +
 
-                this.#name + "," +
-                this.#lastname + "," +
-                this.#health + "," +
-                this.#energy + "," +
+                this.name + "," +
+                this.lastname + "," +
+                this.health + "," +
+                this.energy + "," +
                 this.constitutionAbilities.toString() + "," +
                 this.mentalAbilities.toString() + "," +
                 this.dexteriteAbilities.toString() + "," +
                 this.survieAbilities.toString() + "," +
                 this.specialAbilities1.toString() + "," +
-                this.specialAbilities2.toString() + "," +
-                this.talent1.toString() + "," +
-                this.talent2.toString() +
+                this.specialAbilities2.toString() +
 
                 "]";
     }
@@ -77,14 +67,12 @@ class Character {
                 elements[1],
                 elements[2],
                 elements[3],
-                elements[4],
-                elements[5],
-                elements[6],
-                elements[7],
-                elements[8],
-                elements[9],
-                elements[10],
-                elements[11]
+                AbilityCategory.getFromString(elements[4]),
+                AbilityCategory.getFromString(elements[5]),
+                AbilityCategory.getFromString(elements[6]),
+                AbilityCategory.getFromString(elements[7]),
+                AbilityCategory.getFromString(elements[8]),
+                AbilityCategory.getFromString(elements[9])
             );
 
             return character;
@@ -94,7 +82,7 @@ class Character {
     }
 
     getFullName() {
-        return this.#name + " " + this.#lastname;
+        return this.name + " " + this.lastname;
     }
 
     static correctSplit(str) {

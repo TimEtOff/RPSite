@@ -3,29 +3,29 @@ import { Character } from "./character";
 
 class AbilityCategory {
 
-    #special;
-    #name;
-    #categoryLevel;
-    #numberOfAbilities;
+    special;
+    name;
+    categoryLevel;
+    numberOfAbilities;
     abilities;
 
     constructor(special, name, categoryLevel, abilities) {
-        this.#special = special;
-        this.#name = name;
-        this.#categoryLevel = categoryLevel;
-        this.#numberOfAbilities = abilities.length;
+        this.special = special;
+        this.name = name;
+        this.categoryLevel = categoryLevel;
+        this.numberOfAbilities = abilities.length;
         this.abilities = abilities;
     }
 
     toString() {
         var str = "AbilityCategory[" +
-                this.#special + "," +
-                this.#name + "," +
-                this.#categoryLevel + "," +
-                this.#numberOfAbilities;
+                this.special + "," +
+                this.name + "," +
+                this.categoryLevel + "," +
+                this.numberOfAbilities;
 
         var i = 0;
-        while (i != this.#numberOfAbilities) {
+        while (i != this.numberOfAbilities) {
             str += "," + this.abilities[i].toString();
             i++;
         }
@@ -41,10 +41,10 @@ class AbilityCategory {
             var list = str.split("AbilityCategory[");
             var elements = Character.correctSplit(Character.removeLastChar(list[1]));
 
-            abilities = [];
-            i = 0;
-            while (i != Integer.parseInt(elements[3])) {
-                abilities.add(Ability.getFromString(elements[i + 4]));
+            var abilities = [];
+            var i = 0;
+            while (i != elements[3]) {
+                abilities.push(Ability.getFromString(elements[i + 4]));
                 i++;
             }
 
@@ -52,8 +52,7 @@ class AbilityCategory {
                     elements[0],
                     elements[1],
                     elements[2],
-                    new Ability[0]
-
+                    abilities
             );
         }
 

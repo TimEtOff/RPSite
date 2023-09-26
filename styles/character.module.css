@@ -33,9 +33,30 @@
   height: 80vh;
   background: #202020;
   margin-top: 2.7%;
-  margin-left: -65%;
+  margin-left: 2.7%;
   margin-bottom: 2.7%;
   overflow-x: hidden;
   overflow-y: auto; 
   border-radius: 20px;
+  float: left;
+}
+
+.characterForm {
+  width: 60%;
+  height: 80vh;
+  background: #202020;
+  margin-top: 2.7%;
+  margin-right: 2.7%;
+  margin-bottom: 2.7%;
+  overflow-x: hidden;
+  overflow-y: auto; 
+  border-radius: 20px;
+  float: right;
+}
+
+.characterForm label {
+  color: white;
+  margin-left: 3%;
+  margin-right: 2%;
+  margin-top:2%;
 }
