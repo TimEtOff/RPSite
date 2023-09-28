@@ -5,22 +5,44 @@ import styles from "../styles/components/character-list.module.css";
 import { useRouter } from 'next/router';
 
 export default function CharacterList({ editCharacter }) {
-    const router = useRouter();
+
+    const [characters, setCharacters] = useState(null)
+    const [isLoading, setLoading] = useState(true)
 
     function newCharacter() {
         return function (e) {
             if (hasCookie('id')) {
                 var id = getCookie('id');
+                var newCharId;
                 fetch('/api/character/new-character', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ id: id })
+                }).then((res) => res.json())
+                .then((json) => {
+                    newCharId = json.characterId;
+                    fetch('/api/character/get-character', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: id, characterId: newCharId })
+                    }).then((res) => res.json())
+                    .then((json) => {
+                        var i = 0;
+                        var newChars = [];
+                        while (i != characters.length) {
+                            newChars.push(characters[i]);
+                            i++;
+                        }
+                        newChars.push({id: id, characterId: newCharId, character: json.character});
+                        setCharacters(newChars);
+                    })
                 })
-                router.reload();
             } else {
-                alert("Vous n'êtes pas connecté")
+                alert("Vous n'êtes pas connecté");
             }
         }
     }
@@ -36,15 +58,21 @@ export default function CharacterList({ editCharacter }) {
                     },
                     body: JSON.stringify({ id: id, characterId: param })
                 })
-                router.reload();
+                
+                var i = 0;
+                var newChars = [];
+                while (i != characters.length) {
+                    if (characters[i].characterId != param) {
+                        newChars.push(characters[i]);
+                    }
+                    i++;
+                }
+                setCharacters(newChars);
             } else {
-                alert("Vous n'êtes pas connecté")
+                alert("Vous n'êtes pas connecté");
             }
         }
     }
-
-    const [characters, setCharacters] = useState(null)
-    const [isLoading, setLoading] = useState(true)
  
     useEffect(() => {
         var id = getCookie('id');

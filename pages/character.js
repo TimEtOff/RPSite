@@ -103,12 +103,14 @@ export default function CharacterPage() {
     //    character.specialAbilities2.abilities[1].level = formJson.specialAbilities2Ab1Level;
     //    character.specialAbilities2.abilities[2].level = formJson.specialAbilities2Ab2Level;
 
+        characterData.character = character.toString();
+
         fetch('/api/character/update-character', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id: characterData.id, characterId: characterData.characterId, character: character.toString() }),
+            body: JSON.stringify(characterData),
         }).then((res) => {
             alert("Personnage \"" + character.getFullName() + "\" sauvegardé")
         })
@@ -272,13 +274,13 @@ export default function CharacterPage() {
                                         <label>Survie</label>
                                     </div>
                                     <div key="Perception">
-                                        <input type="number" name="dexteriteAbilities0Level" style={{width: 40}}
+                                        <input type="number" name="survieAbilities0Level" style={{width: 40}}
                                             value={survieAbilities.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setSurvieAbilities, survieAbilities, 0, e)}/> 
                                         <label>Perception</label>
                                     </div>
                                     <div key="Savoir-faire">
-                                        <input type="number" name="dexteriteAbilities1Level" style={{width: 40}}
+                                        <input type="number" name="survieAbilities1Level" style={{width: 40}}
                                             value={survieAbilities.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setSurvieAbilities, survieAbilities, 1, e)}/> 
                                         <label>Savoir-faire</label>
