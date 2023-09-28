@@ -85,23 +85,23 @@ export default function CharacterPage() {
         character.survieAbilities.abilities[0].level = formJson.survieAbilities0Level;
         character.survieAbilities.abilities[1].level = formJson.survieAbilities1Level;
 
-    //    character.specialAbilities1.name = formJson.specialAbilities1CatName;
-    //    character.specialAbilities1.categoryLevel = formJson.specialAbilities1CatLevel;
-    //    character.specialAbilities1.abilities[0].name = formJson.specialAbilities1Ab0Name;
-    //    character.specialAbilities1.abilities[1].name = formJson.specialAbilities1Ab1Name;
-    //    character.specialAbilities1.abilities[2].name = formJson.specialAbilities1Ab2Name;
-    //    character.specialAbilities1.abilities[0].level = formJson.specialAbilities1Ab0Level;
-    //    character.specialAbilities1.abilities[1].level = formJson.specialAbilities1Ab1Level;
-    //    character.specialAbilities1.abilities[2].level = formJson.specialAbilities1Ab2Level;
+        character.specialAbilities1.name = formJson.specialAbilities1CatName;
+        character.specialAbilities1.categoryLevel = formJson.specialAbilities1CatLevel;
+        character.specialAbilities1.abilities[0].name = formJson.specialAbilities1Ab0Name;
+        character.specialAbilities1.abilities[1].name = formJson.specialAbilities1Ab1Name;
+        character.specialAbilities1.abilities[2].name = formJson.specialAbilities1Ab2Name;
+        character.specialAbilities1.abilities[0].level = formJson.specialAbilities1Ab0Level;
+        character.specialAbilities1.abilities[1].level = formJson.specialAbilities1Ab1Level;
+        character.specialAbilities1.abilities[2].level = formJson.specialAbilities1Ab2Level;
 
-    //    character.specialAbilities2.name = formJson.specialAbilities2CatName;
-    //    character.specialAbilities2.categoryLevel = formJson.specialAbilities2CatLevel;
-    //    character.specialAbilities2.abilities[0].name = formJson.specialAbilities2Ab0Name;
-    //    character.specialAbilities2.abilities[1].name = formJson.specialAbilities2Ab1Name;
-    //    character.specialAbilities2.abilities[2].name = formJson.specialAbilities2Ab2Name;
-    //    character.specialAbilities2.abilities[0].level = formJson.specialAbilities2Ab0Level;
-    //    character.specialAbilities2.abilities[1].level = formJson.specialAbilities2Ab1Level;
-    //    character.specialAbilities2.abilities[2].level = formJson.specialAbilities2Ab2Level;
+        character.specialAbilities2.name = formJson.specialAbilities2CatName;
+        character.specialAbilities2.categoryLevel = formJson.specialAbilities2CatLevel;
+        character.specialAbilities2.abilities[0].name = formJson.specialAbilities2Ab0Name;
+        character.specialAbilities2.abilities[1].name = formJson.specialAbilities2Ab1Name;
+        character.specialAbilities2.abilities[2].name = formJson.specialAbilities2Ab2Name;
+        character.specialAbilities2.abilities[0].level = formJson.specialAbilities2Ab0Level;
+        character.specialAbilities2.abilities[1].level = formJson.specialAbilities2Ab1Level;
+        character.specialAbilities2.abilities[2].level = formJson.specialAbilities2Ab2Level;
 
         characterData.character = character.toString();
 
@@ -171,8 +171,8 @@ export default function CharacterPage() {
                     <div className={styles.characterForm} suppressHydrationWarning>
                         <form onSubmit={handleSubmit}>
 
-                            <div className=" tw-container tw-ml-6 tw-mt-2">
-                                <div className=" tw-mx-3 tw-my-4 tw-float-left">
+                            <div className={styles.name}>
+                                <div className="tw-my-4 tw-float-left">
                                     <label>
                                         Prénom
                                     </label>
@@ -182,7 +182,7 @@ export default function CharacterPage() {
                                         size="15"/>
                                 </div>
 
-                                <div className=" tw-mx-3 tw-my-4 tw-float-left">
+                                <div className="tw-my-4 tw-float-left">
                                     <label>
                                         Nom
                                     </label>
@@ -193,11 +193,8 @@ export default function CharacterPage() {
                                 </div>
                             </div>
 
-                            <br/>
-
-                            <div key="abilities">
-                                <br/>
-                                <div key="constitutionAbilities">
+                            <div key="abilities" className={styles.abilities}>
+                                <div key="constitutionAbilities" className={styles.constCat}>
                                     <div key="Constitution">
                                         <input type="number" name="constitutionAbilitiesCatLevel" style={{width: 40}}
                                             value={constitutionAbilities.categoryLevel}
@@ -220,7 +217,7 @@ export default function CharacterPage() {
 
                                 <br/>
 
-                                <div key="mentalAbilities">
+                                <div key="mentalAbilities" className={styles.mentCat}>
                                     <div key="Mental">
                                         <input type="number" name="mentalAbilitiesCatLevel" style={{width: 40}}
                                             value={mentalAbilities.categoryLevel}
@@ -243,7 +240,7 @@ export default function CharacterPage() {
 
                                 <br/>
 
-                                <div key="dexteriteAbilities">
+                                <div key="dexteriteAbilities" className={styles.dextCat}>
                                     <div key="Dexterite">
                                         <input type="number" name="dexteriteAbilitiesCatLevel" style={{width: 40}}
                                             value={dexteriteAbilities.categoryLevel}
@@ -266,7 +263,7 @@ export default function CharacterPage() {
 
                                 <br/>
 
-                                <div key="survieAbilities">
+                                <div key="survieAbilities" className={styles.survCat}>
                                     <div key="Survie">
                                         <input type="number" name="survieAbilitiesCatLevel" style={{width: 40}}
                                             value={survieAbilities.categoryLevel}
@@ -286,11 +283,79 @@ export default function CharacterPage() {
                                         <label>Savoir-faire</label>
                                     </div>
                                 </div>
+
+                                <div key="specialAbilities1" className={styles.spe1Cat}>
+                                    <div key="Special1Cat">
+                                        <input type="number" name="specialAbilities1CatLevel" style={{width: 40}}
+                                            value={specialAbilities1.categoryLevel}
+                                            onChange={e => editAbiltyCatLevel(setSpecialAbilities1, specialAbilities1, e)}/> 
+                                        <input type="text" name="specialAbilities1CatName" size={13} className="tw-ml-3"
+                                            value={specialAbilities1.name}
+                                            onChange={e => editAbiltyCatName(setSpecialAbilities1, specialAbilities1, e)}/>
+                                    </div>
+                                    <div key="Special0">
+                                        <input type="number" name="specialAbilities1Ab0Level" style={{width: 40}}
+                                            value={specialAbilities1.abilities[0].level}
+                                            onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 0, e)}/> 
+                                        <input type="text" name="specialAbilities1Ab0Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities1.abilities[0].name}
+                                            onChange={e => editAbiltyName(setSpecialAbilities1, specialAbilities1, 0, e)}/>
+                                    </div>
+                                    <div key="Special1">
+                                        <input type="number" name="specialAbilities1Ab1Level" style={{width: 40}}
+                                            value={specialAbilities1.abilities[1].level}
+                                            onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 1, e)}/> 
+                                        <input type="text" name="specialAbilities1Ab1Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities1.abilities[1].name}
+                                            onChange={e => editAbiltyName(setSpecialAbilities1, specialAbilities1, 1, e)}/>
+                                    </div>
+                                    <div key="Special2">
+                                        <input type="number" name="specialAbilities1Ab2Level" style={{width: 40}}
+                                            value={specialAbilities1.abilities[2].level}
+                                            onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 2, e)}/> 
+                                        <input type="text" name="specialAbilities1Ab2Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities1.abilities[2].name}
+                                            onChange={e => editAbiltyName(setSpecialAbilities1, specialAbilities1, 2, e)}/>
+                                    </div>
+                                </div>
+
+                                <div key="specialAbilities2" className={styles.spe2Cat}>
+                                    <div key="specialAbilities2">
+                                        <input type="number" name="specialAbilities2CatLevel" style={{width: 40}}
+                                            value={specialAbilities2.categoryLevel}
+                                            onChange={e => editAbiltyCatLevel(setSpecialAbilities2, specialAbilities2, e)}/> 
+                                        <input type="text" name="specialAbilities2CatName" size={13} className="tw-ml-3"
+                                            value={specialAbilities2.name}
+                                            onChange={e => editAbiltyCatName(setSpecialAbilities2, specialAbilities2, e)}/>
+                                    </div>
+                                    <div key="Special0">
+                                        <input type="number" name="specialAbilities2Ab0Level" style={{width: 40}}
+                                            value={specialAbilities2.abilities[0].level}
+                                            onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 0, e)}/> 
+                                        <input type="text" name="specialAbilities2Ab0Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities2.abilities[0].name}
+                                            onChange={e => editAbiltyName(setSpecialAbilities2, specialAbilities2, 0, e)}/>
+                                    </div>
+                                    <div key="Special1">
+                                        <input type="number" name="specialAbilities2Ab1Level" style={{width: 40}}
+                                            value={specialAbilities2.abilities[1].level}
+                                            onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 1, e)}/> 
+                                        <input type="text" name="specialAbilities2Ab1Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities2.abilities[1].name}
+                                            onChange={e => editAbiltyName(setSpecialAbilities2, specialAbilities2, 1, e)}/>
+                                    </div>
+                                    <div key="Special2">
+                                        <input type="number" name="specialAbilities2Ab2Level" style={{width: 40}}
+                                            value={specialAbilities2.abilities[2].level}
+                                            onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 2, e)}/> 
+                                        <input type="text" name="specialAbilities2Ab2Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities2.abilities[2].name}
+                                            onChange={e => editAbiltyName(setSpecialAbilities2, specialAbilities2, 2, e)}/>
+                                    </div>
+                                </div>
                             </div>
 
-                            <br/>
-
-                            <button className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-9 tw-mt-3">
+                            <button className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-9 tw-mt-1">
                                 Sauvegarder
                             </button>
                         </form>

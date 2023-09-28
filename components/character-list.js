@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Character } from './character/character';
 import { setCookie, getCookie, hasCookie } from 'cookies-next';
 import styles from "../styles/components/character-list.module.css";
-import { useRouter } from 'next/router';
 
 export default function CharacterList({ editCharacter }) {
 
