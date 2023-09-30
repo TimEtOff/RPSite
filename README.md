@@ -12,18 +12,10 @@
     - `json/userData.json` with `[]` in it.
 - Create a `pages/api/password.js` file with the following function:
     ```js
-    export default function getPassword(encrypt, password) {
+    export default function getPassword(password) {
+        // Do your things
 
-        // true = encrypt, false = decrypt
-        if (encrypt) {
-            var newPassword = // Encrypt
-
-            return newPassword;
-        } else {
-            var newPassword = // Decrypt
-
-            return newPassword;
-        }
+        return valueThatWillBeCompared
     }   
     ```
 **Port used:** 3002

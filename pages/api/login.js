@@ -15,15 +15,15 @@ export default async function handler(req, res) {
             // Get the data from the request body
             const { name, password } = req.body;
 
-            var newPassword = getPassword(true, password)
+            var newPassword = getPassword(password)
             var id;
 
             var i = 0;
             var found = false;
             while (i != objectData.length) {
                 var actualData = objectData[i];
-                if (actualData.name === name) {
-                    if (actualData.password === newPassword) {
+                if (actualData.name == name) {
+                    if (actualData.password == newPassword) {
                         id = actualData.id;
                         found = true;
                     }

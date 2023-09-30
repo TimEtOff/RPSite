@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ionic/react": "^7.4.2",
     "autoprefixer": "10.4.15",
     "cookies-next": "^4.0.0",
     "crypto-js": "^4.1.1",
     "fs": "^0.0.1-security",
+    "ionicons": "^7.1.2",
     "next": "13.4.19",
     "postcss": "8.4.29",
     "react": "18.2.0",

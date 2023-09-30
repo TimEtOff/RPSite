@@ -30,13 +30,13 @@ export default async function handler(req, res) {
             const { name, password } = req.body;
 
             var id = makeid(10);
-            var newPassword = getPassword(true, password)
+            var newPassword = getPassword(password)
 
             var i = 0;
             var nameUsed = false;
             while (i != objectData.length) {
                 var actualData = objectData[i];
-                if (actualData.name === name) {
+                if (actualData.name == name) {
                     nameUsed = true;
                 }
                 i++;
@@ -44,6 +44,7 @@ export default async function handler(req, res) {
 
             if (nameUsed) {
               res.status(500).json({ message: 'Name already used', id: null});
+              return;
             }
 
             // Add the new data to the object
