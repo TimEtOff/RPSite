@@ -36,7 +36,7 @@ export default function CharacterList({ editCharacter }) {
                             newChars.push(characters[i]);
                             i++;
                         }
-                        newChars.push({id: id, characterId: newCharId, character: json.character});
+                        newChars.push({id: id, gameId: json.characterData.gameId, characterId: newCharId, character: json.characterData.character});
                         setCharacters(newChars);
                     })
                 })

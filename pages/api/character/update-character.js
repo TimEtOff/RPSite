@@ -28,11 +28,12 @@ export default async function handler(req, res) {
             const objectData = JSON.parse(jsonData);
         
             // Get the data from the request body
-            const { id, characterId, character } = req.body;
+            const { id, gameId, characterId, character } = req.body;
 
             // Add the new data to the object
             const newData = {
               id,
+              gameId,
               characterId,
               character
             };
@@ -40,7 +41,7 @@ export default async function handler(req, res) {
             objectData[getCharacterIndex(id, characterId, objectData)] = newData;
         
             // Convert the object back to a JSON string
-            const updatedData = JSON.stringify(objectData);
+            const updatedData = JSON.stringify(objectData, null, 2);
         
             // Write the updated data to the JSON file
             await fsPromises.writeFile(dataFilePath, updatedData);

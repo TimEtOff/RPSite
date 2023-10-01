@@ -4,6 +4,7 @@ import AnimatedGradient from "../components/animated-gradient";
 import Layout from "../components/layout";
 import styles from "../styles/character.module.css"
 import styles2 from '../styles/Home.module.css';
+import stylesForm from '../styles/login.module.css';
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Character } from "@/components/character/character";
@@ -69,39 +70,39 @@ export default function CharacterPage() {
         character.name = formJson.name;
         character.lastname = formJson.lastname;
 
-        character.constitutionAbilities.categoryLevel = formJson.constitutionAbilitiesCatLevel;
-        character.constitutionAbilities.abilities[0].level = formJson.constitutionAbilities0Level;
-        character.constitutionAbilities.abilities[1].level = formJson.constitutionAbilities1Level;
+        character.constitutionAbilities.categoryLevel = character.verifyAbilityChange(character.constitutionAbilities.categoryLevel, formJson.constitutionAbilitiesCatLevel);
+        character.constitutionAbilities.abilities[0].level = character.verifyAbilityChange(character.constitutionAbilities.abilities[0].level, formJson.constitutionAbilities0Level);
+        character.constitutionAbilities.abilities[1].level = character.verifyAbilityChange(character.constitutionAbilities.abilities[1].level, formJson.constitutionAbilities1Level);
 
-        character.mentalAbilities.categoryLevel = formJson.mentalAbilitiesCatLevel;
-        character.mentalAbilities.abilities[0].level = formJson.mentalAbilities0Level;
-        character.mentalAbilities.abilities[1].level = formJson.mentalAbilities1Level;
+        character.mentalAbilities.categoryLevel = character.verifyAbilityChange(character.mentalAbilities.categoryLevel, formJson.mentalAbilitiesCatLevel);
+        character.mentalAbilities.abilities[0].level = character.verifyAbilityChange(character.mentalAbilities.abilities[0].level, formJson.mentalAbilities0Level);
+        character.mentalAbilities.abilities[1].level = character.verifyAbilityChange(character.mentalAbilities.abilities[1].level, formJson.mentalAbilities1Level);
 
-        character.dexteriteAbilities.categoryLevel = formJson.dexteriteAbilitiesCatLevel;
-        character.dexteriteAbilities.abilities[0].level = formJson.dexteriteAbilities0Level;
-        character.dexteriteAbilities.abilities[1].level = formJson.dexteriteAbilities1Level;
+        character.dexteriteAbilities.categoryLevel = character.verifyAbilityChange(character.dexteriteAbilities.categoryLevel, formJson.dexteriteAbilitiesCatLevel);
+        character.dexteriteAbilities.abilities[0].level = character.verifyAbilityChange(character.dexteriteAbilities.abilities[0].level, formJson.dexteriteAbilities0Level);
+        character.dexteriteAbilities.abilities[1].level = character.verifyAbilityChange(character.dexteriteAbilities.abilities[1].level, formJson.dexteriteAbilities1Level);
 
-        character.survieAbilities.categoryLevel = formJson.survieAbilitiesCatLevel;
-        character.survieAbilities.abilities[0].level = formJson.survieAbilities0Level;
-        character.survieAbilities.abilities[1].level = formJson.survieAbilities1Level;
+        character.survieAbilities.categoryLevel = character.verifyAbilityChange(character.survieAbilities.categoryLevel, formJson.survieAbilitiesCatLevel);
+        character.survieAbilities.abilities[0].level = character.verifyAbilityChange(character.survieAbilities.abilities[0].level, formJson.survieAbilities0Level);
+        character.survieAbilities.abilities[1].level = character.verifyAbilityChange(character.survieAbilities.abilities[1].level, formJson.survieAbilities1Level);
 
         character.specialAbilities1.name = formJson.specialAbilities1CatName;
-        character.specialAbilities1.categoryLevel = formJson.specialAbilities1CatLevel;
+        character.specialAbilities1.categoryLevel = character.verifyAbilityChange(character.specialAbilities1.categoryLevel, formJson.specialAbilities1CatLevel);
         character.specialAbilities1.abilities[0].name = formJson.specialAbilities1Ab0Name;
         character.specialAbilities1.abilities[1].name = formJson.specialAbilities1Ab1Name;
         character.specialAbilities1.abilities[2].name = formJson.specialAbilities1Ab2Name;
-        character.specialAbilities1.abilities[0].level = formJson.specialAbilities1Ab0Level;
-        character.specialAbilities1.abilities[1].level = formJson.specialAbilities1Ab1Level;
-        character.specialAbilities1.abilities[2].level = formJson.specialAbilities1Ab2Level;
+        character.specialAbilities1.abilities[0].level = character.verifyAbilityChange(character.specialAbilities1.abilities[0].level, formJson.specialAbilities1Ab0Level);
+        character.specialAbilities1.abilities[1].level = character.verifyAbilityChange(character.specialAbilities1.abilities[1].level, formJson.specialAbilities1Ab1Level);
+        character.specialAbilities1.abilities[2].level = character.verifyAbilityChange(character.specialAbilities1.abilities[2].level, formJson.specialAbilities1Ab2Level);
 
         character.specialAbilities2.name = formJson.specialAbilities2CatName;
-        character.specialAbilities2.categoryLevel = formJson.specialAbilities2CatLevel;
+        character.specialAbilities2.categoryLevel = character.verifyAbilityChange(character.specialAbilities2.categoryLevel, formJson.specialAbilities2CatLevel);
         character.specialAbilities2.abilities[0].name = formJson.specialAbilities2Ab0Name;
         character.specialAbilities2.abilities[1].name = formJson.specialAbilities2Ab1Name;
         character.specialAbilities2.abilities[2].name = formJson.specialAbilities2Ab2Name;
-        character.specialAbilities2.abilities[0].level = formJson.specialAbilities2Ab0Level;
-        character.specialAbilities2.abilities[1].level = formJson.specialAbilities2Ab1Level;
-        character.specialAbilities2.abilities[2].level = formJson.specialAbilities2Ab2Level;
+        character.specialAbilities2.abilities[0].level = character.verifyAbilityChange(character.specialAbilities2.abilities[0].level, formJson.specialAbilities2Ab0Level);
+        character.specialAbilities2.abilities[1].level = character.verifyAbilityChange(character.specialAbilities2.abilities[1].level, formJson.specialAbilities2Ab1Level);
+        character.specialAbilities2.abilities[2].level = character.verifyAbilityChange(character.specialAbilities2.abilities[2].level, formJson.specialAbilities2Ab2Level);
 
         characterData.character = character.toString();
 
@@ -172,43 +173,45 @@ export default function CharacterPage() {
                         <form onSubmit={handleSubmit}>
 
                             <div className={styles.name}>
-                                <div className="tw-my-4 tw-float-left">
+                                <div className={styles.inputBox}>
+                                    <input type="text" name="name" 
+                                        value={name}
+                                        onChange={e => setName(e.target.value)}/>
                                     <label>
                                         Prénom
                                     </label>
-                                    <input type="text" name="name" 
-                                        value={name}
-                                        onChange={e => setName(e.target.value)}
-                                        size="15"/>
                                 </div>
 
-                                <div className="tw-my-4 tw-float-left">
+                                <div className={styles.inputBox}>
+                                    <input type="text" name="lastname" 
+                                        value={lastname}
+                                        onChange={e => setLastName(e.target.value)}/>
                                     <label>
                                         Nom
                                     </label>
-                                    <input type="text" name="lastname" 
-                                        value={lastname}
-                                        onChange={e => setLastName(e.target.value)}
-                                        size="15"/>
                                 </div>
+                            </div>
+
+                            <div className="tw-flex">
+                                <h1>Capacités</h1> <p className="tw-ml-2 tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.7}}><i>(13pts/capacité, 70pts max)</i></p>
                             </div>
 
                             <div key="abilities" className={styles.abilities}>
                                 <div key="constitutionAbilities" className={styles.constCat}>
-                                    <div key="Constitution">
-                                        <input type="number" name="constitutionAbilitiesCatLevel" style={{width: 40}}
+                                    <div key="Constitution" className={styles.abilityMain}>
+                                        <input type="number" name="constitutionAbilitiesCatLevel" style={{width: 40}} min="0" max="13"
                                             value={constitutionAbilities.categoryLevel}
                                             onChange={e => editAbiltyCatLevel(setConstitutionAbilities, constitutionAbilities, e)}/> 
                                         <label>Constitution</label>
                                     </div>
-                                    <div key="Force">
-                                        <input type="number" name="constitutionAbilities0Level" style={{width: 40}}
+                                    <div key="Force" className={styles.ability}>
+                                        <input type="number" name="constitutionAbilities0Level" style={{width: 40}} min="0" max="13"
                                             value={constitutionAbilities.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setConstitutionAbilities, constitutionAbilities, 0, e)}/> 
                                         <label>Force</label>
                                     </div>
-                                    <div key="Resistance">
-                                        <input type="number" name="constitutionAbilities1Level" style={{width: 40}}
+                                    <div key="Resistance" className={styles.ability}>
+                                        <input type="number" name="constitutionAbilities1Level" style={{width: 40}} min="0" max="13"
                                             value={constitutionAbilities.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setConstitutionAbilities, constitutionAbilities, 1, e)}/> 
                                         <label>Résistance</label>
@@ -218,20 +221,20 @@ export default function CharacterPage() {
                                 <br/>
 
                                 <div key="mentalAbilities" className={styles.mentCat}>
-                                    <div key="Mental">
-                                        <input type="number" name="mentalAbilitiesCatLevel" style={{width: 40}}
+                                    <div key="Mental" className={styles.abilityMain}>
+                                        <input type="number" name="mentalAbilitiesCatLevel" style={{width: 40}} min="0" max="13"
                                             value={mentalAbilities.categoryLevel}
                                             onChange={e => editAbiltyCatLevel(setMentalAbilities, mentalAbilities, e)}/> 
                                         <label>Mental</label>
                                     </div>
-                                    <div key="Intellect">
-                                        <input type="number" name="mentalAbilities0Level" style={{width: 40}}
+                                    <div key="Intellect" className={styles.ability}>
+                                        <input type="number" name="mentalAbilities0Level" style={{width: 40}} min="0" max="13"
                                             value={mentalAbilities.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setMentalAbilities, mentalAbilities, 0, e)}/> 
                                         <label>Intellect</label>
                                     </div>
-                                    <div key="Eloquence">
-                                        <input type="number" name="mentalAbilities1Level" style={{width: 40}}
+                                    <div key="Eloquence" className={styles.ability}>
+                                        <input type="number" name="mentalAbilities1Level" style={{width: 40}} min="0" max="13"
                                             value={mentalAbilities.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setMentalAbilities, mentalAbilities, 1, e)}/> 
                                         <label>Éloquence</label>
@@ -241,20 +244,20 @@ export default function CharacterPage() {
                                 <br/>
 
                                 <div key="dexteriteAbilities" className={styles.dextCat}>
-                                    <div key="Dexterite">
-                                        <input type="number" name="dexteriteAbilitiesCatLevel" style={{width: 40}}
+                                    <div key="Dexterite" className={styles.abilityMain}>
+                                        <input type="number" name="dexteriteAbilitiesCatLevel" style={{width: 40}} min="0" max="13"
                                             value={dexteriteAbilities.categoryLevel}
                                             onChange={e => editAbiltyCatLevel(setDexteriteAbilities, dexteriteAbilities, e)}/> 
                                         <label>Déxtérité</label>
                                     </div>
-                                    <div key="Agilite">
-                                        <input type="number" name="dexteriteAbilities0Level" style={{width: 40}}
+                                    <div key="Agilite" className={styles.ability}>
+                                        <input type="number" name="dexteriteAbilities0Level" style={{width: 40}} min="0" max="13"
                                             value={dexteriteAbilities.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setDexteriteAbilities, dexteriteAbilities, 0, e)}/> 
                                         <label>Agilité</label>
                                     </div>
-                                    <div key="Furtivite">
-                                        <input type="number" name="dexteriteAbilities1Level" style={{width: 40}}
+                                    <div key="Furtivite" className={styles.ability}>
+                                        <input type="number" name="dexteriteAbilities1Level" style={{width: 40}} min="0" max="13"
                                             value={dexteriteAbilities.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setDexteriteAbilities, dexteriteAbilities, 1, e)}/> 
                                         <label>Furtivité</label>
@@ -264,20 +267,20 @@ export default function CharacterPage() {
                                 <br/>
 
                                 <div key="survieAbilities" className={styles.survCat}>
-                                    <div key="Survie">
-                                        <input type="number" name="survieAbilitiesCatLevel" style={{width: 40}}
+                                    <div key="Survie" className={styles.abilityMain}>
+                                        <input type="number" name="survieAbilitiesCatLevel" style={{width: 40}} min="0" max="13"
                                             value={survieAbilities.categoryLevel}
                                             onChange={e => editAbiltyCatLevel(setSurvieAbilities, survieAbilities, e)}/> 
                                         <label>Survie</label>
                                     </div>
-                                    <div key="Perception">
-                                        <input type="number" name="survieAbilities0Level" style={{width: 40}}
+                                    <div key="Perception" className={styles.ability}>
+                                        <input type="number" name="survieAbilities0Level" style={{width: 40}} min="0" max="13"
                                             value={survieAbilities.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setSurvieAbilities, survieAbilities, 0, e)}/> 
                                         <label>Perception</label>
                                     </div>
-                                    <div key="Savoir-faire">
-                                        <input type="number" name="survieAbilities1Level" style={{width: 40}}
+                                    <div key="Savoir-faire" className={styles.ability}>
+                                        <input type="number" name="survieAbilities1Level" style={{width: 40}} min="0" max="13"
                                             value={survieAbilities.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setSurvieAbilities, survieAbilities, 1, e)}/> 
                                         <label>Savoir-faire</label>
@@ -285,32 +288,32 @@ export default function CharacterPage() {
                                 </div>
 
                                 <div key="specialAbilities1" className={styles.spe1Cat}>
-                                    <div key="Special1Cat">
-                                        <input type="number" name="specialAbilities1CatLevel" style={{width: 40}}
+                                    <div key="Special1Cat" className={styles.abilityMain}>
+                                        <input type="number" name="specialAbilities1CatLevel" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities1.categoryLevel}
                                             onChange={e => editAbiltyCatLevel(setSpecialAbilities1, specialAbilities1, e)}/> 
-                                        <input type="text" name="specialAbilities1CatName" size={13} className="tw-ml-3"
+                                        <input type="text" name="specialAbilities1CatName" size={13} className="tw-ml-3" readOnly
                                             value={specialAbilities1.name}
                                             onChange={e => editAbiltyCatName(setSpecialAbilities1, specialAbilities1, e)}/>
                                     </div>
-                                    <div key="Special0">
-                                        <input type="number" name="specialAbilities1Ab0Level" style={{width: 40}}
+                                    <div key="Special0" className={styles.ability}>
+                                        <input type="number" name="specialAbilities1Ab0Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities1.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 0, e)}/> 
                                         <input type="text" name="specialAbilities1Ab0Name" size={13} className="tw-ml-3"
                                             value={specialAbilities1.abilities[0].name}
                                             onChange={e => editAbiltyName(setSpecialAbilities1, specialAbilities1, 0, e)}/>
                                     </div>
-                                    <div key="Special1">
-                                        <input type="number" name="specialAbilities1Ab1Level" style={{width: 40}}
+                                    <div key="Special1" className={styles.ability}>
+                                        <input type="number" name="specialAbilities1Ab1Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities1.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 1, e)}/> 
                                         <input type="text" name="specialAbilities1Ab1Name" size={13} className="tw-ml-3"
                                             value={specialAbilities1.abilities[1].name}
                                             onChange={e => editAbiltyName(setSpecialAbilities1, specialAbilities1, 1, e)}/>
                                     </div>
-                                    <div key="Special2">
-                                        <input type="number" name="specialAbilities1Ab2Level" style={{width: 40}}
+                                    <div key="Special2" className={styles.ability}>
+                                        <input type="number" name="specialAbilities1Ab2Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities1.abilities[2].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 2, e)}/> 
                                         <input type="text" name="specialAbilities1Ab2Name" size={13} className="tw-ml-3"
@@ -320,32 +323,32 @@ export default function CharacterPage() {
                                 </div>
 
                                 <div key="specialAbilities2" className={styles.spe2Cat}>
-                                    <div key="specialAbilities2">
-                                        <input type="number" name="specialAbilities2CatLevel" style={{width: 40}}
+                                    <div key="specialAbilities2" className={styles.abilityMain}>
+                                        <input type="number" name="specialAbilities2CatLevel" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities2.categoryLevel}
                                             onChange={e => editAbiltyCatLevel(setSpecialAbilities2, specialAbilities2, e)}/> 
-                                        <input type="text" name="specialAbilities2CatName" size={13} className="tw-ml-3"
+                                        <input type="text" name="specialAbilities2CatName" size={13} className="tw-ml-3" readOnly
                                             value={specialAbilities2.name}
                                             onChange={e => editAbiltyCatName(setSpecialAbilities2, specialAbilities2, e)}/>
                                     </div>
-                                    <div key="Special0">
-                                        <input type="number" name="specialAbilities2Ab0Level" style={{width: 40}}
+                                    <div key="Special0" className={styles.ability}>
+                                        <input type="number" name="specialAbilities2Ab0Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities2.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 0, e)}/> 
                                         <input type="text" name="specialAbilities2Ab0Name" size={13} className="tw-ml-3"
                                             value={specialAbilities2.abilities[0].name}
                                             onChange={e => editAbiltyName(setSpecialAbilities2, specialAbilities2, 0, e)}/>
                                     </div>
-                                    <div key="Special1">
-                                        <input type="number" name="specialAbilities2Ab1Level" style={{width: 40}}
+                                    <div key="Special1" className={styles.ability}>
+                                        <input type="number" name="specialAbilities2Ab1Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities2.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 1, e)}/> 
                                         <input type="text" name="specialAbilities2Ab1Name" size={13} className="tw-ml-3"
                                             value={specialAbilities2.abilities[1].name}
                                             onChange={e => editAbiltyName(setSpecialAbilities2, specialAbilities2, 1, e)}/>
                                     </div>
-                                    <div key="Special2">
-                                        <input type="number" name="specialAbilities2Ab2Level" style={{width: 40}}
+                                    <div key="Special2" className={styles.ability}>
+                                        <input type="number" name="specialAbilities2Ab2Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities2.abilities[2].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 2, e)}/> 
                                         <input type="text" name="specialAbilities2Ab2Name" size={13} className="tw-ml-3"

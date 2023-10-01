@@ -14,42 +14,31 @@ export default function Home() {
       <main>
         <AnimatedGradient>
           <h1 className={styles.title}>
-            Bienvenue sur le site officiel <Link href="/character">Astrauworld</Link>
+            Bienvenue sur le site
           </h1>
 
-          <p className={styles.description}>
-            Le site est encore en <code>construction</code>, jugez pas
-          </p>
+          <h1 className={styles.title}>
+            de l'atelier JDR
+          </h1>
         </AnimatedGradient>
 
         <div className={styles.grid}>
-          <a href="https://github.com/AstrauworldMC/launcher/wiki" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+          <Link href="/character" className={styles.card}>
+            <h3>Personnages &rarr;</h3>
+            <p>Créez des personnages utilisables en jeu.</p>
+          </Link>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+          <Link href="/games" className={styles.card}>
+            <h3>Jeu &rarr;</h3>
+            <p>Gérez des parties de JDR, en développement.</p>
+          </Link>
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
+          <Link href="https://github.com/TimEtOff/RPSite" className={styles.card}>
+            <h3>GitHub &rarr;</h3>
             <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
+              Tout le code du site en open-source.
             </p>
-          </a>
+          </Link>
         </div>
       </main>
     </Layout>

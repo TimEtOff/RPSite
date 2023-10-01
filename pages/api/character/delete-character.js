@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
             var updatedData = deleteCharacter(id, characterId, objectData);
 
-            await fsPromises.writeFile(dataFilePath, JSON.stringify(updatedData));
+            await fsPromises.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2));
         
             // Send a success response
             res.status(200).json({ message: 'Character deleted successfully'});

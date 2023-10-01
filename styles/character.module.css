@@ -61,12 +61,53 @@
   margin-top:2%;
 }
 
+.characterForm h1 {
+  margin-left: 2rem;
+  font-weight: bold;
+}
+
 .name {
   width: 100%;
-  height: 5rem;
-  margin-left: 2rem;
+  height: 6rem;
+  margin-left: 1rem;
   margin-right: 2rem;
   margin-top: 1rem;
+  display: flex;
+}
+
+.inputBox {
+  position: relative;
+  width: 20%;
+  height: 50px;
+  border-bottom: 2px solid white;
+  margin: 30px 20px;
+}
+
+.inputBox label {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  font-size: 1em;
+  color: white;
+  font-weight: bold;
+  pointer-events: none;
+  transition: .5s;
+  margin-left: 0;
+}
+
+.inputBox input:focus~label,
+.inputBox input:valid~label {
+  top: -5px;
+}
+
+.inputBox input {
+  width: 100%;
+  height: 100%;
+  color: white;
+  background: transparent;
+  border: none;
+  outline: none;
 }
 
 .abilities {
@@ -75,10 +116,47 @@
   margin-right: 2rem;
   display: grid;
   grid-template-columns: repeat(2, 280px);
-  grid-template-rows: 100px 100px 130px;
+  grid-template-rows: 110px 110px 140px;
   gap: 10px;
   grid-auto-rows: 0px;
   align-items: center;
+}
+
+.abilityMain {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.ability {
+  margin-left: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.ability input[type=number],
+.abilityMain input[type=number] {
+  color: white;
+  background: transparent;
+  border: solid 1px;
+  border-radius: 20px;
+  outline: none;
+  text-align: center;
+}
+
+.ability input[type=text] {
+  color: white;
+  background: rgba(255, 255, 255, .05);
+  border-bottom: solid 2px;
+  border-radius: 0;
+  outline: none;
+}
+
+.abilityMain input[type=text] {
+  color: white;
+  background: transparent;
+  border-bottom: solid 2px;
+  border-radius: 0;
+  outline: none;
 }
 
 .constCat {

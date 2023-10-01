@@ -12,8 +12,8 @@ class Character {
     mentalAbilities = new AbilityCategory(false, "Mental", 0, [new Ability("Intellect", 0), new Ability("Eloquence", 0)]);
     dexteriteAbilities = new AbilityCategory(false, "Dext\u00e9rit\u00e9", 0, [new Ability("Agilit\u00e9", 0), new Ability("Furtivit\u00e9", 0)]);
     survieAbilities = new AbilityCategory(false, "Survie", 0, [new Ability("Perception", 0), new Ability("Savoir-faire", 0)]);
-    specialAbilities1 = new AbilityCategory(true, "", 0, [new Ability("", 0), new Ability("", 0), new Ability("", 0)]);
-    specialAbilities2 = new AbilityCategory(true, "", 0, [new Ability("", 0), new Ability("", 0), new Ability("", 0)]);
+    specialAbilities1 = new AbilityCategory(true, "Special1", 0, [new Ability("", 0), new Ability("", 0), new Ability("", 0)]);
+    specialAbilities2 = new AbilityCategory(true, "Special2", 0, [new Ability("", 0), new Ability("", 0), new Ability("", 0)]);
     
     constructor(name, lastname) {
         this.name = name;
@@ -83,6 +83,31 @@ class Character {
 
     getFullName() {
         return this.name + " " + this.lastname;
+    }
+
+    getTotalLevel() {
+        var totalLevel = 0;    
+        totalLevel += parseInt(this.constitutionAbilities.getTotalCategoryLevel()) +
+                parseInt(this.mentalAbilities.getTotalCategoryLevel()) +
+                parseInt(this.dexteriteAbilities.getTotalCategoryLevel()) +
+                parseInt(this.survieAbilities.getTotalCategoryLevel()) +
+                parseInt(this.specialAbilities1.getTotalCategoryLevel()) +
+                parseInt(this.specialAbilities2.getTotalCategoryLevel())    
+        return totalLevel;
+    }
+
+    verifyAbilityChange(oldAbilityLevel, newAbilityLevel) {
+
+        if (parseInt(newAbilityLevel) > 13) {
+            newAbilityLevel = 13;
+        }
+
+        if (parseInt(this.getTotalLevel()) - parseInt(oldAbilityLevel) + parseInt(newAbilityLevel) > 70) {
+            newAbilityLevel = 70 - parseInt(this.getTotalLevel()) + parseInt(oldAbilityLevel);
+        }
+
+        return newAbilityLevel;
+
     }
 
     static correctSplit(str) {

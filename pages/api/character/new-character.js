@@ -20,13 +20,14 @@ export default async function handler(req, res) {
             // Add the new data to the object
             const newData = {
               id,
-              characterId:characterId,
-              character:new Character("Nouveau", "personnage").toString()
+              gameId: "",
+              characterId: characterId,
+              character: new Character("Nouveau", "personnage").toString()
             };
             objectData.push(newData);
         
             // Convert the object back to a JSON string
-            const updatedData = JSON.stringify(objectData);
+            const updatedData = JSON.stringify(objectData, null, 2);
         
             // Write the updated data to the JSON file
             await fsPromises.writeFile(dataFilePath, updatedData);

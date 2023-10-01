@@ -58,6 +58,17 @@ class AbilityCategory {
 
         return null;
     }
+
+    getTotalCategoryLevel() {
+        var i = 0;
+        var level = 0;
+        level += parseInt(this.categoryLevel);
+        while (i != parseInt(this.numberOfAbilities)) {
+            level += parseInt(this.abilities[i].level);
+            i++;
+        }
+        return level;
+    }
     
 }
 
