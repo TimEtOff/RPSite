@@ -13,6 +13,39 @@ import { Ability } from "@/components/character/ability";
 import { AbilityCategory } from "@/components/character/ability-category";
 const CharacterList = dynamic(() => import('../components/character-list'), { ssr: false })
 
+const Input = (props) => {
+    const onKeyPress = e => {
+      // normalize the pattern as a Regular expression
+      const pattern = props.pattern instanceof RegExp ? props.pattern : new RegExp(props.pattern)
+      
+      // if the currently typed character is not in the regular expression, do not allow it (to be rendered)
+      // if the length of the input will exceed, do not allow
+      if( !pattern.test(e.key) || e.target.value.length + 1 > (props.max||Infinity))
+        e.preventDefault()
+  
+      // if also has "onKeyPress" prop, fire it now
+      props.onKeyPress && props.onKeyPress(e) 
+    }
+    
+    // prevent invalid content pasting
+    const onPaste = e => {
+      // get the pattern with midifications for testig a whole string rather than a single character
+      const pattern = props.pattern instanceof RegExp ? props.pattern : new RegExp(`^${props.pattern}+$`)
+      
+      // get pasted content as string
+      const paste = (e.clipboardData || window.clipboardData).getData('Text')
+      
+      // vaildate
+      if( !pattern.test(paste) || paste.length > (props.max||Infinity))
+        e.preventDefault()
+        
+      // if also has "onPaste" prop, fire it now
+      props.onPaste && props.onPaste(e) 
+    }
+      
+    return <input {...props} onKeyDown={onKeyPress} onPaste={onPaste} />
+}
+
 export default function CharacterPage() {
 
     const [characterData, setCharacterData] = useState(null);
@@ -119,6 +152,8 @@ export default function CharacterPage() {
 
     }
 
+    const regexPattern = "[0-9a-zA-Z&À-ÖÙ-ÿ\-°~#œŒ]"
+
     function editAbiltyCatLevel(constFunction, abilityCategory, e) {
         var value = e.target.value;
         var newAbilityCategory = AbilityCategory.getFromString(abilityCategory.toString());
@@ -174,8 +209,8 @@ export default function CharacterPage() {
 
                             <div className={styles.name}>
                                 <div className={styles.inputBox}>
-                                    <input type="text" name="name" 
-                                        value={name}
+                                    <Input type="text" name="name"
+                                        value={name} pattern={regexPattern}
                                         onChange={e => setName(e.target.value)}/>
                                     <label>
                                         Prénom
@@ -183,8 +218,8 @@ export default function CharacterPage() {
                                 </div>
 
                                 <div className={styles.inputBox}>
-                                    <input type="text" name="lastname" 
-                                        value={lastname}
+                                    <Input type="text" name="lastname"
+                                        value={lastname} pattern={regexPattern}
                                         onChange={e => setLastName(e.target.value)}/>
                                     <label>
                                         Nom
@@ -300,24 +335,24 @@ export default function CharacterPage() {
                                         <input type="number" name="specialAbilities1Ab0Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities1.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 0, e)}/> 
-                                        <input type="text" name="specialAbilities1Ab0Name" size={13} className="tw-ml-3"
-                                            value={specialAbilities1.abilities[0].name}
+                                        <Input type="text" name="specialAbilities1Ab0Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities1.abilities[0].name} pattern={regexPattern}
                                             onChange={e => editAbiltyName(setSpecialAbilities1, specialAbilities1, 0, e)}/>
                                     </div>
                                     <div key="Special1" className={styles.ability}>
                                         <input type="number" name="specialAbilities1Ab1Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities1.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 1, e)}/> 
-                                        <input type="text" name="specialAbilities1Ab1Name" size={13} className="tw-ml-3"
-                                            value={specialAbilities1.abilities[1].name}
+                                        <Input type="text" name="specialAbilities1Ab1Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities1.abilities[1].name} pattern={regexPattern}
                                             onChange={e => editAbiltyName(setSpecialAbilities1, specialAbilities1, 1, e)}/>
                                     </div>
                                     <div key="Special2" className={styles.ability}>
                                         <input type="number" name="specialAbilities1Ab2Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities1.abilities[2].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities1, specialAbilities1, 2, e)}/> 
-                                        <input type="text" name="specialAbilities1Ab2Name" size={13} className="tw-ml-3"
-                                            value={specialAbilities1.abilities[2].name}
+                                        <Input type="text" name="specialAbilities1Ab2Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities1.abilities[2].name} pattern={regexPattern}
                                             onChange={e => editAbiltyName(setSpecialAbilities1, specialAbilities1, 2, e)}/>
                                     </div>
                                 </div>
@@ -335,24 +370,24 @@ export default function CharacterPage() {
                                         <input type="number" name="specialAbilities2Ab0Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities2.abilities[0].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 0, e)}/> 
-                                        <input type="text" name="specialAbilities2Ab0Name" size={13} className="tw-ml-3"
-                                            value={specialAbilities2.abilities[0].name}
+                                        <Input type="text" name="specialAbilities2Ab0Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities2.abilities[0].name} pattern={regexPattern}
                                             onChange={e => editAbiltyName(setSpecialAbilities2, specialAbilities2, 0, e)}/>
                                     </div>
                                     <div key="Special1" className={styles.ability}>
                                         <input type="number" name="specialAbilities2Ab1Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities2.abilities[1].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 1, e)}/> 
-                                        <input type="text" name="specialAbilities2Ab1Name" size={13} className="tw-ml-3"
-                                            value={specialAbilities2.abilities[1].name}
+                                        <Input type="text" name="specialAbilities2Ab1Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities2.abilities[1].name} pattern={regexPattern}
                                             onChange={e => editAbiltyName(setSpecialAbilities2, specialAbilities2, 1, e)}/>
                                     </div>
                                     <div key="Special2" className={styles.ability}>
                                         <input type="number" name="specialAbilities2Ab2Level" style={{width: 40}} min="0" max="13"
                                             value={specialAbilities2.abilities[2].level}
                                             onChange={e => editAbiltyLevel(setSpecialAbilities2, specialAbilities2, 2, e)}/> 
-                                        <input type="text" name="specialAbilities2Ab2Name" size={13} className="tw-ml-3"
-                                            value={specialAbilities2.abilities[2].name}
+                                        <Input type="text" name="specialAbilities2Ab2Name" size={13} className="tw-ml-3"
+                                            value={specialAbilities2.abilities[2].name} pattern={regexPattern}
                                             onChange={e => editAbiltyName(setSpecialAbilities2, specialAbilities2, 2, e)}/>
                                     </div>
                                 </div>

@@ -6,6 +6,39 @@ import { useState } from "react";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/router";
 
+const Input = (props) => {
+    const onKeyPress = e => {
+      // normalize the pattern as a Regular expression
+      const pattern = props.pattern instanceof RegExp ? props.pattern : new RegExp(props.pattern)
+      
+      // if the currently typed character is not in the regular expression, do not allow it (to be rendered)
+      // if the length of the input will exceed, do not allow
+      if( !pattern.test(e.key) || e.target.value.length + 1 > (props.max||Infinity))
+        e.preventDefault()
+  
+      // if also has "onKeyPress" prop, fire it now
+      props.onKeyPress && props.onKeyPress(e) 
+    }
+    
+    // prevent invalid content pasting
+    const onPaste = e => {
+      // get the pattern with midifications for testig a whole string rather than a single character
+      const pattern = props.pattern instanceof RegExp ? props.pattern : new RegExp(`^${props.pattern}+$`)
+      
+      // get pasted content as string
+      const paste = (e.clipboardData || window.clipboardData).getData('Text')
+      
+      // vaildate
+      if( !pattern.test(paste) || paste.length > (props.max||Infinity))
+        e.preventDefault()
+        
+      // if also has "onPaste" prop, fire it now
+      props.onPaste && props.onPaste(e) 
+    }
+      
+    return <input {...props} onKeyDown={onKeyPress} onPaste={onPaste} />
+}
+
 export default function Login() {
 
     const [register, setRegister] = useState(false)
@@ -73,6 +106,9 @@ export default function Login() {
 
     }
 
+    const regexPattern = "[0-9a-zA-Z&À-ÖÙ-ÿ\-°~#œŒ]"
+    const patternPassword = "[0-9a-zA-Z&!$?@#]"
+
     return(
         <Layout>
             <Head>
@@ -87,11 +123,11 @@ export default function Login() {
                             <h2>Connexion</h2>
                             <form onSubmit={handleSubmit}>
                                 <div className={styles.inputBox}>
-                                    <input type="text" name="name" required></input>
+                                    <Input type="text" name="name" pattern={regexPattern} required/>
                                     <label>Nom</label>
                                 </div>
                                 <div className={styles.inputBox}>
-                                    <input type="password" name="password" required></input>
+                                    <Input type="password" name="password" pattern={patternPassword} required/>
                                     <label>Mot de passe</label>
                                 </div>
                                 <button onClick={() => {setRegister(false); document.forms[0].submit()}} className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-float-left tw-mt-3">
