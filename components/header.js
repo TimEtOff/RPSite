@@ -32,8 +32,8 @@ export default function HeaderComponent() {
             <div className={styles.logo_link}>
             <Link href="/">
                     <Image
-                    width={45}
-                    height={45}
+                    width={42}
+                    height={42}
                     src="/logo.svg"
                     alt="logo"></Image>
                 </Link>
@@ -44,6 +44,7 @@ export default function HeaderComponent() {
             <ul>
                 <li><Link href="/">Accueil</Link></li>
                 <li><Link href="/character">Personnages</Link></li>
+                <li><Link href="/games">Parties</Link></li>
                 <button suppressHydrationWarning className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-5 tw-mt-3" onClick={buttonClicked} >{ getConnectedOrNot() }</button>
             </ul>
     

@@ -10,6 +10,7 @@
 - Create `json/` folder with these files:
     - `json/characters.json` file with `[]` in it.
     - `json/userData.json` with `[]` in it.
+    - `json/games.json` with `[]` in it.
 - Create a `pages/api/password.js` file with the following function:
     ```js
     export default function getPassword(password) {

@@ -94,10 +94,6 @@
   pointer-events: none;
   transition: .5s;
   margin-left: 0;
-}
-
-.inputBox input:focus~label,
-.inputBox input:valid~label {
   top: -5px;
 }
 

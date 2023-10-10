@@ -10,7 +10,7 @@
 .topnav a {
   color: #f2f2f2;
   text-align: center;
-  padding: 11px 16px;
+  padding: 13px 16px;
   padding-bottom: 0px;
   text-decoration: none;
 }
@@ -57,7 +57,7 @@
 .topnav li a,
 .topnav li button {
     display: block; 
-    padding-top: 13px;
+    padding-top: 15px;
 }
 
 .topnav li a:hover {

@@ -42,10 +42,6 @@
     font-weight: 500;
     pointer-events: none;
     transition: .5s;
-}
-
-.inputBox input:focus~label,
-.inputBox input:valid~label {
     top: -5px;
 }
 

@@ -29,7 +29,7 @@ export default function Home() {
           </Link>
 
           <Link href="/games" className={styles.card}>
-            <h3>Jeu &rarr;</h3>
+            <h3>Parties &rarr;</h3>
             <p>Gérez des parties de JDR, en développement.</p>
           </Link>
 
