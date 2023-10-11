@@ -26,16 +26,6 @@ export default async function handler(req, res) {
               specialCat2: "",
               characters: []
             };
-            /**
-             * characters model:
-             * [{
-             *    id,
-             *    character (Character class),
-             *    inventory: [{
-             *        (Item class)
-             *    }, {}]
-             * }, {}]
-             */
             
             objectData.push(newData);
         

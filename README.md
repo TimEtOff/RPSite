@@ -5,6 +5,7 @@
 - Install these modules (with `npm install` or equivalent):
     - `cookies-next`
     - `fs`
+    - `--save-dev typescript @types/react @types/node`
     - *(`crypto-js` can be used for password encryption)*
 - Pull github repository.
 - Create `json/` folder with these files:

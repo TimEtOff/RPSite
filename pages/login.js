@@ -62,7 +62,6 @@ export default function Login() {
             })
             .then((res) => res.json())
             .then((json) => {
-                console.log("oui");
                 var id = json.id;
                 if (id == null) {
                     alert("Nom ou mot de passe incorrect, veuillez réessayer.");

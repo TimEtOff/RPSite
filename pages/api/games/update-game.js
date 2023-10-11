@@ -39,8 +39,21 @@ export default async function handler(req, res) {
                 specialCat2,
                 characters
             };
+            /**
+             * characters model:
+             * [{
+             *    id,
+             *    characterId (true characterId + makeId(4)),
+             *    userName,
+             *    luck, 
+             *    character (Character class),
+             *    inventory: [{
+             *        (Item class)
+             *    }, {}]
+             * }, {}]
+             */
 
-            objectData[getCharacterIndex(id, gameId, objectData)] = newData;
+            objectData[getGameIndex(id, gameId, objectData)] = newData;
         
             // Convert the object back to a JSON string
             const updatedData = JSON.stringify(objectData, null, 2);
