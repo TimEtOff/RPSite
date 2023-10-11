@@ -85,15 +85,14 @@
 
 .inputBox label {
   position: absolute;
-  top: 50%;
   left: 5px;
-  transform: translateY(-50%);
+  transform: translateY(-60%);
   font-size: 1em;
   color: white;
   font-weight: bold;
   pointer-events: none;
   transition: .5s;
-  margin-left: 0;
+  margin-left: -2%;
   top: -5px;
 }
 

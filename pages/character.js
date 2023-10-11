@@ -12,6 +12,7 @@ import { Input } from "@/components/input"
 import { hasCookie } from "cookies-next";
 import { Ability } from "@/components/character/ability";
 import { AbilityCategory } from "@/components/character/ability-category";
+import Router from "next/router";
 const CharacterList = dynamic(() => import('../components/character-list'), { ssr: false })
 
 export default function CharacterPage() {
@@ -106,6 +107,7 @@ export default function CharacterPage() {
         character.specialAbilities2.abilities[2].level = character.verifyAbilityChange(character.specialAbilities2.abilities[2].level, formJson.specialAbilities2Ab2Level);
 
         characterData.character = character.toString();
+        // TODO Trouver un moyen d'update ce qui est afiché sur le form après le submit
 
         fetch('/api/character/update-character', {
             method: 'POST',
@@ -116,11 +118,16 @@ export default function CharacterPage() {
         }).then((res) => {
             alert("Personnage \"" + character.getFullName() + "\" sauvegardé")
         })
-        // TODO Passer le nouveau character à <CharacterList />
+        
+        Router.push({
+            pathname: '/character'
+          }, 
+          undefined, { shallow: true }
+        )
 
     }
 
-    const regexPattern = "[0-9a\-zA\-Z&À\-ÖÙ\-ÿ\\-\\.°~#œŒ]"
+    const regexPattern = "[0-9a\-zA\-Z&À\-ÖÙ\-ÿ\\-\\.°~#œŒ ]"
 
     function editAbiltyCatLevel(constFunction, abilityCategory, e) {
         var value = e.target.value;
@@ -196,7 +203,7 @@ export default function CharacterPage() {
                             </div>
 
                             <div className="tw-flex">
-                                <h1>Capacités</h1> <p className="tw-ml-2 tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.7}}><i>(13pts/capacité, 70pts max)</i></p>
+                                <h1>Capacités</h1> <p className="tw-ml-2 tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.7}}><i>(13pts/capacité, 80pts max)</i></p>
                             </div>
 
                             <div key="abilities" className={styles.abilities}>

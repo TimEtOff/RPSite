@@ -14,6 +14,7 @@ import { AbilityCategory } from "@/components/character/ability-category";
 import GamesList from "@/components/games-list";
 import Dialog from "@/components/dialog";
 import Router from "next/router";
+import Input from "@/components/input";
 const CharacterList = dynamic(() => import('../components/character-list'), { ssr: false })
 
 function makeid(length) {
@@ -30,22 +31,25 @@ function makeid(length) {
 
 export default function GamesPage() {
 
-    const regexPattern = "[0\-9a\-zA\-Z&À\-ÖÙ\-ÿ\\-\\.°~#œŒ]"
+    const regexPattern = "[0\-9a\-zA\-Z&À\-ÖÙ\-ÿ\\-\\.°~#œŒ ]"
+
+    const [ needReload, setNeedReload ] = useState(false);
 
     const [ editedGame, setEditedGame ] = useState(null);
+    const [ completeGameEdit, setCompleteGameEdit ] = useState(false);
     const [ editedCharacter, setEditedCharacter ] = useState(null);
     const [ availableCharacters, setAvailableCharacters ] = useState(null);
 
     function editGame(gameData) {
         return function (e) {
-            console.log(gameData);
+            setEditedGame(gameData);
+            setEditedCharacter(null);
+            setCompleteGameEdit(true);
         }
     }
 
     function addCharacter(gameData) {
         return function (e) {
-            setEditedGame(gameData);
-
             fetch('/api/games/get-available-characters', {
                 method: 'POST',
                 headers: {
@@ -56,11 +60,12 @@ export default function GamesPage() {
             .then((res) => res.json())
             .then((json) => {
                 setAvailableCharacters(json.characters);
+                setEditedGame(gameData);
             })
 
             Router.push({
                 pathname: '/games',
-                query: { showDialog: 'y' }
+                query: { chooseCharacter: 'y' }
               }, 
               undefined, { shallow: true }
             )
@@ -71,20 +76,18 @@ export default function GamesPage() {
         return function (e) {
             setEditedGame(editedGame);
             setEditedCharacter(characterData);
-            console.log("// TODO Edit character");
+            setCompleteGameEdit(true);
         }
     }
 
     function reset() {
-        return function (e) {
-            setEditedGame(null);
-            setEditedCharacter(null)
-        }
+        setEditedGame(null);
+        setEditedCharacter(null);
+        setCompleteGameEdit(false);
     }
 
     function onClose() {
         setAvailableCharacters(null);
-        setEditedGame(null);
         Router.push({
             pathname: '/games'
           }, 
@@ -123,6 +126,105 @@ export default function GamesPage() {
         }
     }
 
+    function handleSubmitGame(e) {
+        e.preventDefault();
+
+        if (!hasCookie('id')) {
+            alert("Vous n'êtes pas connecté");
+            return;
+        }
+
+        fetch('/api/games/update-game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(editedGame),
+        }).then((res) => {
+            alert("Partie \"" + editedGame.name + "\" sauvegardé")
+            Router.push({
+                pathname: '/games'
+              }, 
+              undefined, { shallow: true }
+            )
+            setNeedReload(!needReload);
+        })
+        
+    }
+
+    function getForm() {
+        if (completeGameEdit) {
+
+            if (editedCharacter != null) {
+                // When a character is edited
+                return (
+                    <h1>Character ({Character.getFromString(editedCharacter.character).getFullName()})</h1>
+                )
+            } else {
+                // When the game is edited
+                return (
+                    <form onSubmit={handleSubmitGame}>
+                        <div className={styles.name} style={{display:"grid", gridTemplateRows:"repeat(2, auto)", height:"auto", }}>
+                            <div className="tw-flex">
+                                <div className={styles.inputBox} style={{marginBottom:"20px"}}>
+                                    <Input type="text" name="name"
+                                        value={editedGame.name} regpattern={regexPattern}
+                                        onChange={e => setEditedGame({...editedGame, name:e.target.value})}
+                                    />
+                                    <label>
+                                        Nom
+                                    </label>
+                                </div>
+
+                                <div className={styles.inputBox} style={{width:"25%", marginBottom:"20px", borderBottom:"0"}}>
+                                    <Input type="text" name="gameId"
+                                        value={editedGame.gameId} readOnly
+                                    />
+                                    <label>
+                                        ID à partager
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="tw-flex">
+                                <div className={styles.inputBox} style={{width:"35%"}}>
+                                    <Input type="text" name="specialCat1"
+                                        value={editedGame.specialCat1} regpattern={regexPattern}
+                                        onChange={e => setEditedGame({...editedGame, specialCat1:e.target.value})}
+                                    />
+                                    <label>
+                                        Catégorie spéciale 1
+                                    </label>
+                                </div>
+
+                                <div className={styles.inputBox} style={{width:"35%"}}>
+                                    <Input type="text" name="specialCat2"
+                                        value={editedGame.specialCat2} regpattern={regexPattern}
+                                        onChange={e => setEditedGame({...editedGame, specialCat2:e.target.value})}
+                                    />
+                                    <label>
+                                        Catégorie spéciale 2
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-9 tw-mt-1">
+                            Sauvegarder
+                        </button>
+                    </form>
+                )
+            }
+            
+        } else {
+            // When nothing is edited
+            return (
+                <h1 className="tw-text-center tw-text-xl" style={{paddingTop:"47%", margin:0}}
+                >Veillez sélectionner un élément à éditer</h1>
+            )
+        }
+    }
+
     return (
         <Layout>
             <Head>
@@ -131,7 +233,7 @@ export default function GamesPage() {
 
             <main>
             
-                <Dialog title="Ajouter un personnage" onClose={onClose} disableOkButton={true}>
+                <Dialog title="Ajouter un personnage" onClose={onClose} disableOkButton={true} searchParam="chooseCharacter">
                     {availableCharacters?.map((character) => {
                         return (
                             <div key={character.characterId} className={stylesList.character} suppressHydrationWarning>
@@ -146,7 +248,6 @@ export default function GamesPage() {
                                             Choisir
                                         </button>
                                     </li>
-                
                                 </ul>
                             </div>
                         )
@@ -169,11 +270,12 @@ export default function GamesPage() {
                             editGame={editGame} 
                             addCharacter={addCharacter} 
                             editCharacter={editCharacter}
-                            reset={reset}/>
+                            reset={reset}
+                            needReload={needReload}/>
                     </div>
 
                     <div className={styles.characterForm} suppressHydrationWarning>
-                        
+                        {getForm()}
                     </div>
                 </div>
             </main>

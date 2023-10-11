@@ -79,7 +79,7 @@ export default function Login() {
 
     }
 
-    const regexPattern = "[0\-9a\-zA\-Z&À\-ÖÙ\-ÿ\\-°~#œŒ]"
+    const regexPattern = "[0\-9a\-zA\-Z&À\-ÖÙ\-ÿ\\-°~#œŒ ]"
     const patternPassword = "[0\-9a\-zA\-Z&!$?@#]"
 
     return(

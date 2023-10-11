@@ -5,7 +5,7 @@ import styles from "../styles/components/character-list.module.css";
 import Dialog from './dialog';
 import Router from 'next/router';
 
-export default function GamesList({ editGame, addCharacter, editCharacter, reset }) {
+export default function GamesList({ editGame, addCharacter, editCharacter, reset, needReload }) {
 
     const [games, setGames] = useState(null)
     const [isLoading, setLoading] = useState(true)
@@ -58,20 +58,20 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
     function deleteGame(param) {
         return function (e) {
             if (hasCookie('id')) {
-                if (confirm("Toutes les données de cette partie seront supprimées. Continuer ?")) {
+                if (confirm("Toutes les données de cette partie (" + param.name + ") seront supprimées. Continuer ?")) {
                     var id = getCookie('id');
                     fetch('/api/games/delete-game', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ id: id, gameId: param })
+                        body: JSON.stringify({ id: id, gameId: param.gameId })
                     })
 
                     var i = 0;
                     var newGames = [];
                     while (i != games.length) {
-                        if (games[i].gameId != param) {
+                        if (games[i].gameId != param.gameId) {
                             newGames.push(games[i]);
                         }
                         i++;
@@ -84,7 +84,7 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
         }
     }
 
-    function returnToGamesList(param) {
+    function returnToGamesList() {
         return function (e) {
             if (hasCookie('id')) {
                 var id = getCookie('id');
@@ -131,7 +131,7 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
 
     function deleteChar(character) {
         return function (e) {
-            if (confirm("Attetion, si vous supprimez ce personnage, toutes les données seulement présentes dans la partie seront supprimées. Continuer ?")) {
+            if (confirm("Attention, si vous supprimez ce personnage (" + Character.getFromString(character.character).getFullName() + "), toutes les données seulement présentes dans la partie seront supprimées. Continuer ?")) {
 
                 function getCharIndex(characterId, objectData) {
                     var i = 0;
@@ -174,6 +174,22 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
             }
         }
     }
+
+    useEffect(() => {
+        if (editedGame != null) {
+            var id = getCookie('id');
+            fetch('/api/games/get-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: id, gameId: editedGame.gameId })
+            }).then((res) => res.json())
+            .then((json) => {
+                setEditedGame(json.gameData);
+            })
+        }
+    }, [needReload])
  
     useEffect(() => {
         var id = getCookie('id');
@@ -191,6 +207,7 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
                 setGames(json.games)
                 setLoading(false)
             })
+
         } else {
             setGames([{
                 id: "", 
@@ -226,7 +243,7 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
                     </li>
 
                     <li>
-                        <button onClick={deleteGame(game.gameId)} className="tw-bg-neutral-800 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-my-4">
+                        <button onClick={deleteGame(game)} className="tw-bg-neutral-800 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-my-4">
                             Supprimer
                         </button>
                     </li>
@@ -242,7 +259,7 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
     return (
         <div suppressHydrationWarning>
             <h1 className=" tw-text-lg tw-mx-5 tw-mt-2 tw-font-bold">{editedGame.name}</h1>
-            <button onClick={returnToGamesList(games)} className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-ml-5 tw-mr-2 tw-mt-2">
+            <button onClick={returnToGamesList()} className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-ml-5 tw-mr-2 tw-mt-2">
                 &larr; Retour
             </button>
             <button onClick={editGame(editedGame)} className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-mt-2">

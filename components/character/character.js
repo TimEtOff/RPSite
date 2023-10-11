@@ -102,8 +102,8 @@ class Character {
             newAbilityLevel = 13;
         }
 
-        if (parseInt(this.getTotalLevel()) - parseInt(oldAbilityLevel) + parseInt(newAbilityLevel) > 70) {
-            newAbilityLevel = 70 - parseInt(this.getTotalLevel()) + parseInt(oldAbilityLevel);
+        if (parseInt(this.getTotalLevel()) - parseInt(oldAbilityLevel) + parseInt(newAbilityLevel) > 80) {
+            newAbilityLevel = 80 - parseInt(this.getTotalLevel()) + parseInt(oldAbilityLevel);
         }
 
         return newAbilityLevel;
