@@ -107,7 +107,6 @@ export default function CharacterPage() {
         character.specialAbilities2.abilities[2].level = character.verifyAbilityChange(character.specialAbilities2.abilities[2].level, formJson.specialAbilities2Ab2Level);
 
         characterData.character = character.toString();
-        // TODO Trouver un moyen d'update ce qui est afiché sur le form après le submit
 
         fetch('/api/character/update-character', {
             method: 'POST',
@@ -117,14 +116,9 @@ export default function CharacterPage() {
             body: JSON.stringify(characterData),
         }).then((res) => {
             alert("Personnage \"" + character.getFullName() + "\" sauvegardé")
+            editCharacter(characterData)();
         })
         
-        Router.push({
-            pathname: '/character'
-          }, 
-          undefined, { shallow: true }
-        )
-
     }
 
     const regexPattern = "[0-9a\-zA\-Z&À\-ÖÙ\-ÿ\\-\\.°~#œŒ ]"
