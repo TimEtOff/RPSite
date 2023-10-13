@@ -46,6 +46,7 @@ export default async function handler(req, res) {
              *    characterId (true characterId + makeId(4)),
              *    userName,
              *    luck, 
+             *    level,
              *    character (Character class),
              *    inventory: [{
              *        (Item class)

@@ -274,7 +274,7 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
             return (
                 <div key={characterData.characterId} className={styles.character} suppressHydrationWarning>
                     <h1 style={{paddingTop:8}}>
-                        {character.getFullName()}
+                        {character.getFullName() + " (C" + characterData.luck + ")"}
                         <p className="tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.2}}><i>par {characterData.userName}</i></p>
                     </h1>
 
@@ -294,7 +294,7 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
                     </ul>
                 </div>
             )
-        }) }
+            }) }
         </div>
     )
 

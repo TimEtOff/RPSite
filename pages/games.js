@@ -5,6 +5,7 @@ import Layout from "../components/layout";
 import styles from "../styles/character.module.css"
 import styles2 from '../styles/Home.module.css';
 import stylesList from '../styles/components/character-list.module.css';
+import stylesGame from '../styles/games.module.css'
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Character } from "@/components/character/character";
@@ -38,6 +39,9 @@ export default function GamesPage() {
     const [ editedGame, setEditedGame ] = useState(null);
     const [ completeGameEdit, setCompleteGameEdit ] = useState(false);
     const [ editedCharacter, setEditedCharacter ] = useState(null);
+    const [ editedCharTab, setEditedCharTab ] = useState(0);
+    // 0 -> general infos/level; 1 -> inventory; 2 -> injuries?
+
     const [ availableCharacters, setAvailableCharacters ] = useState(null);
 
     function editGame(gameData) {
@@ -152,13 +156,124 @@ export default function GamesPage() {
         
     }
 
+    function handleSubmitChar(e) {
+        e.preventDefault();
+
+        if (!hasCookie('id')) {
+            alert("Vous n'êtes pas connecté");
+            return;
+        }
+
+        var newChars = editedGame.characters;
+        var i = 0;
+        while (i != Object.entries(newChars).length) {
+            var actualChar = newChars[i];
+            if (editedCharacter.characterId == actualChar.characterId) {
+                newChars[i] = editedCharacter;
+                break;
+            }
+            i++;
+        }
+
+        setEditedGame({...editedGame, characters:newChars})
+
+        fetch('/api/games/update-game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(editedGame),
+        }).then((res) => {
+            alert("Partie \"" + editedGame.name + "\"/" + Character.getFromString(editedCharacter.character).getFullName() + " sauvegardé")
+            Router.push({
+                pathname: '/games'
+              }, 
+              undefined, { shallow: true }
+            )
+            setNeedReload(!needReload);
+        })
+        
+    }
+
     function getForm() {
         if (completeGameEdit) {
 
             if (editedCharacter != null) {
                 // When a character is edited
                 return (
-                    <h1>Character ({Character.getFromString(editedCharacter.character).getFullName()})</h1>
+                    <>
+                        <div className={stylesGame.infos}>
+                            <h1>Personnage ({Character.getFromString(editedCharacter.character).getFullName()})</h1>
+                            <div className={stylesGame.tabs}>
+                                <button name={editedCharTab == 0 ? ("selected") : ("not")} onClick={() => setEditedCharTab(0)}>
+                                    Général
+                                </button>
+                                <button name={editedCharTab == 1 ? ("selected") : ("not")} onClick={() => setEditedCharTab(1)}>
+                                    Inventaire
+                                </button>
+                                <button name={editedCharTab == 2 ? ("selected") : ("not")} onClick={() => setEditedCharTab(2)}>
+                                    Blessures
+                                </button>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div className="tw-mx-3 tw-my-2">
+                            <form onSubmit={handleSubmitChar}>
+                            {(() => {
+                                switch (editedCharTab) {
+                                    case 0:
+                                        return (
+                                            <div className="tw-flex">
+                                                <div className={styles.inputBox} style={{width:"5rem", marginBottom:"1rem", marginTop:"2rem"}}>
+                                                    <Input type="number" name="luck" min="1" max="6"
+                                                        value={editedCharacter.luck} regpattern={regexPattern}
+                                                        onChange={e => setEditedCharacter({...editedCharacter, luck:e.target.value})}
+                                                    />
+                                                    <label>
+                                                        Chance
+                                                    </label>
+                                                </div>
+
+                                                <div className={styles.inputBox} style={{width:"30rem", marginBottom:"1rem", marginTop:"2rem", borderBottom:"none"}}>
+                                                    <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mt-4 tw-mr-4"
+                                                        onClick={() => {editedCharacter.level > 0 ? (setEditedCharacter({...editedCharacter, level:parseInt(editedCharacter.level)-1})) : (null)}}>
+                                                        Diminuer
+                                                    </button>
+                                                    <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mt-4"
+                                                        onClick={() => setEditedCharacter({...editedCharacter, level:parseInt(editedCharacter.level)+1})}>
+                                                        Augmenter
+                                                    </button>
+                                                    <label style={{transform:"translateY(-90%)", left:"3.5%"}}>
+                                                        Niveau ({editedCharacter.level} actuel)
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        ) // TODO Liste des points de compétences + points des levels à choisir 
+                        
+                                    case 1:
+                                        return (
+                                            <></>
+                                        )
+                        
+                                    case 2:
+                                        return (
+                                            <></>
+                                        )
+                        
+                                    default:
+                                        return (
+                                            <h1>C'est cassé</h1>
+                                        )
+                                }
+                            })()}
+                                <button type="submit" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-mt-2">
+                                    Sauvegarder
+                                </button>
+                            </form>
+                        </div>
+                    </>
                 )
             } else {
                 // When the game is edited

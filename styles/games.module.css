@@ -1,0 +1,21 @@
+.infos {
+    margin: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0;
+}
+
+.infos h1 {
+    margin: 0; 
+    margin-bottom: 1rem;
+}
+
+.tabs button {
+    color: #FFFFFF;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    font-height: 10;
+}
+
+.tabs button[name="selected"] {
+    border-bottom: solid 2px #FF0000;
+}
