@@ -69,54 +69,65 @@ export default function CharacterPage() {
         const formJson = Object.fromEntries(formData.entries());
 
         var character = Character.getFromString(characterData.character);
-        character.name = formJson.name;
-        character.lastname = formJson.lastname;
 
-        character.constitutionAbilities.categoryLevel = character.verifyAbilityChange(character.constitutionAbilities.categoryLevel, formJson.constitutionAbilitiesCatLevel);
-        character.constitutionAbilities.abilities[0].level = character.verifyAbilityChange(character.constitutionAbilities.abilities[0].level, formJson.constitutionAbilities0Level);
-        character.constitutionAbilities.abilities[1].level = character.verifyAbilityChange(character.constitutionAbilities.abilities[1].level, formJson.constitutionAbilities1Level);
-
-        character.mentalAbilities.categoryLevel = character.verifyAbilityChange(character.mentalAbilities.categoryLevel, formJson.mentalAbilitiesCatLevel);
-        character.mentalAbilities.abilities[0].level = character.verifyAbilityChange(character.mentalAbilities.abilities[0].level, formJson.mentalAbilities0Level);
-        character.mentalAbilities.abilities[1].level = character.verifyAbilityChange(character.mentalAbilities.abilities[1].level, formJson.mentalAbilities1Level);
-
-        character.dexteriteAbilities.categoryLevel = character.verifyAbilityChange(character.dexteriteAbilities.categoryLevel, formJson.dexteriteAbilitiesCatLevel);
-        character.dexteriteAbilities.abilities[0].level = character.verifyAbilityChange(character.dexteriteAbilities.abilities[0].level, formJson.dexteriteAbilities0Level);
-        character.dexteriteAbilities.abilities[1].level = character.verifyAbilityChange(character.dexteriteAbilities.abilities[1].level, formJson.dexteriteAbilities1Level);
-
-        character.survieAbilities.categoryLevel = character.verifyAbilityChange(character.survieAbilities.categoryLevel, formJson.survieAbilitiesCatLevel);
-        character.survieAbilities.abilities[0].level = character.verifyAbilityChange(character.survieAbilities.abilities[0].level, formJson.survieAbilities0Level);
-        character.survieAbilities.abilities[1].level = character.verifyAbilityChange(character.survieAbilities.abilities[1].level, formJson.survieAbilities1Level);
-
-        character.specialAbilities1.name = formJson.specialAbilities1CatName;
-        character.specialAbilities1.categoryLevel = character.verifyAbilityChange(character.specialAbilities1.categoryLevel, formJson.specialAbilities1CatLevel);
-        character.specialAbilities1.abilities[0].name = formJson.specialAbilities1Ab0Name;
-        character.specialAbilities1.abilities[1].name = formJson.specialAbilities1Ab1Name;
-        character.specialAbilities1.abilities[2].name = formJson.specialAbilities1Ab2Name;
-        character.specialAbilities1.abilities[0].level = character.verifyAbilityChange(character.specialAbilities1.abilities[0].level, formJson.specialAbilities1Ab0Level);
-        character.specialAbilities1.abilities[1].level = character.verifyAbilityChange(character.specialAbilities1.abilities[1].level, formJson.specialAbilities1Ab1Level);
-        character.specialAbilities1.abilities[2].level = character.verifyAbilityChange(character.specialAbilities1.abilities[2].level, formJson.specialAbilities1Ab2Level);
-
-        character.specialAbilities2.name = formJson.specialAbilities2CatName;
-        character.specialAbilities2.categoryLevel = character.verifyAbilityChange(character.specialAbilities2.categoryLevel, formJson.specialAbilities2CatLevel);
-        character.specialAbilities2.abilities[0].name = formJson.specialAbilities2Ab0Name;
-        character.specialAbilities2.abilities[1].name = formJson.specialAbilities2Ab1Name;
-        character.specialAbilities2.abilities[2].name = formJson.specialAbilities2Ab2Name;
-        character.specialAbilities2.abilities[0].level = character.verifyAbilityChange(character.specialAbilities2.abilities[0].level, formJson.specialAbilities2Ab0Level);
-        character.specialAbilities2.abilities[1].level = character.verifyAbilityChange(character.specialAbilities2.abilities[1].level, formJson.specialAbilities2Ab1Level);
-        character.specialAbilities2.abilities[2].level = character.verifyAbilityChange(character.specialAbilities2.abilities[2].level, formJson.specialAbilities2Ab2Level);
-
-        characterData.character = character.toString();
-
-        fetch('/api/character/update-character', {
+        fetch('/api/games/get-game-specials', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(characterData),
-        }).then((res) => {
-            alert("Personnage \"" + character.getFullName() + "\" sauvegardé")
-            editCharacter(characterData)();
+            body: JSON.stringify({gameId: characterData.gameId}),
+        }).then((res) => res.json())
+        .then((json) => {
+            character.specialAbilities1.name = json.specialCat1;
+            character.specialAbilities2.name = json.specialCat2;
+
+            character.name = formJson.name;
+            character.lastname = formJson.lastname;
+    
+            character.constitutionAbilities.categoryLevel = character.verifyAbilityChange(character.constitutionAbilities.categoryLevel, formJson.constitutionAbilitiesCatLevel);
+            character.constitutionAbilities.abilities[0].level = character.verifyAbilityChange(character.constitutionAbilities.abilities[0].level, formJson.constitutionAbilities0Level);
+            character.constitutionAbilities.abilities[1].level = character.verifyAbilityChange(character.constitutionAbilities.abilities[1].level, formJson.constitutionAbilities1Level);
+    
+            character.mentalAbilities.categoryLevel = character.verifyAbilityChange(character.mentalAbilities.categoryLevel, formJson.mentalAbilitiesCatLevel);
+            character.mentalAbilities.abilities[0].level = character.verifyAbilityChange(character.mentalAbilities.abilities[0].level, formJson.mentalAbilities0Level);
+            character.mentalAbilities.abilities[1].level = character.verifyAbilityChange(character.mentalAbilities.abilities[1].level, formJson.mentalAbilities1Level);
+    
+            character.dexteriteAbilities.categoryLevel = character.verifyAbilityChange(character.dexteriteAbilities.categoryLevel, formJson.dexteriteAbilitiesCatLevel);
+            character.dexteriteAbilities.abilities[0].level = character.verifyAbilityChange(character.dexteriteAbilities.abilities[0].level, formJson.dexteriteAbilities0Level);
+            character.dexteriteAbilities.abilities[1].level = character.verifyAbilityChange(character.dexteriteAbilities.abilities[1].level, formJson.dexteriteAbilities1Level);
+    
+            character.survieAbilities.categoryLevel = character.verifyAbilityChange(character.survieAbilities.categoryLevel, formJson.survieAbilitiesCatLevel);
+            character.survieAbilities.abilities[0].level = character.verifyAbilityChange(character.survieAbilities.abilities[0].level, formJson.survieAbilities0Level);
+            character.survieAbilities.abilities[1].level = character.verifyAbilityChange(character.survieAbilities.abilities[1].level, formJson.survieAbilities1Level);
+    
+            character.specialAbilities1.categoryLevel = character.verifyAbilityChange(character.specialAbilities1.categoryLevel, formJson.specialAbilities1CatLevel);
+            character.specialAbilities1.abilities[0].name = formJson.specialAbilities1Ab0Name;
+            character.specialAbilities1.abilities[1].name = formJson.specialAbilities1Ab1Name;
+            character.specialAbilities1.abilities[2].name = formJson.specialAbilities1Ab2Name;
+            character.specialAbilities1.abilities[0].level = character.verifyAbilityChange(character.specialAbilities1.abilities[0].level, formJson.specialAbilities1Ab0Level);
+            character.specialAbilities1.abilities[1].level = character.verifyAbilityChange(character.specialAbilities1.abilities[1].level, formJson.specialAbilities1Ab1Level);
+            character.specialAbilities1.abilities[2].level = character.verifyAbilityChange(character.specialAbilities1.abilities[2].level, formJson.specialAbilities1Ab2Level);
+    
+            character.specialAbilities2.categoryLevel = character.verifyAbilityChange(character.specialAbilities2.categoryLevel, formJson.specialAbilities2CatLevel);
+            character.specialAbilities2.abilities[0].name = formJson.specialAbilities2Ab0Name;
+            character.specialAbilities2.abilities[1].name = formJson.specialAbilities2Ab1Name;
+            character.specialAbilities2.abilities[2].name = formJson.specialAbilities2Ab2Name;
+            character.specialAbilities2.abilities[0].level = character.verifyAbilityChange(character.specialAbilities2.abilities[0].level, formJson.specialAbilities2Ab0Level);
+            character.specialAbilities2.abilities[1].level = character.verifyAbilityChange(character.specialAbilities2.abilities[1].level, formJson.specialAbilities2Ab1Level);
+            character.specialAbilities2.abilities[2].level = character.verifyAbilityChange(character.specialAbilities2.abilities[2].level, formJson.specialAbilities2Ab2Level);
+    
+            characterData.character = character.toString();
+    
+            fetch('/api/character/update-character', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(characterData),
+            }).then((res) => {
+                alert("Personnage \"" + character.getFullName() + "\" sauvegardé")
+                editCharacter(characterData)();
+            })
         })
         
     }
@@ -192,6 +203,15 @@ export default function CharacterPage() {
                                         onChange={e => setLastName(e.target.value)}/>
                                     <label>
                                         Nom
+                                    </label>
+                                </div>
+
+                                <div className={styles.inputBox} style={{width:"8rem"}}>
+                                    <Input type="text" name="gameId"
+                                        value={characterData != null ? (characterData.gameId) : ("")} regpattern={regexPattern}
+                                        onChange={e => setCharacterData({...characterData, gameId:e.target.value})}/>
+                                    <label>
+                                        ID de la partie
                                     </label>
                                 </div>
                             </div>
