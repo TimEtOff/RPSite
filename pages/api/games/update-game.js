@@ -50,7 +50,9 @@ export default async function handler(req, res) {
              *    availablePoints,
              *    character (Character class),
              *    inventory: [{
-             *        (Item class)
+             *        itemId,
+             *        name,
+             *        count
              *    }, {}]
              * }, {}]
              */
