@@ -16,6 +16,8 @@ import GamesList from "@/components/games-list";
 import Dialog from "@/components/dialog";
 import Router from "next/router";
 import Input from "@/components/input";
+import { useSearchParams } from "next/navigation";
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem} from "@nextui-org/dropdown";
 const CharacterList = dynamic(() => import('../components/character-list'), { ssr: false })
 
 function makeid(length) {
@@ -184,7 +186,7 @@ export default function GamesPage() {
             },
             body: JSON.stringify(editedGame),
         }).then((res) => {
-            alert("Partie \"" + editedGame.name + "\"/" + Character.getFromString(editedCharacter.character).getFullName() + " sauvegardé")
+            alert("Partie \"" + editedGame.name + "\"/\"" + Character.getFromString(editedCharacter.character).getFullName() + "\" sauvegardé")
             Router.push({
                 pathname: '/games'
               }, 
@@ -224,33 +226,796 @@ export default function GamesPage() {
                             {(() => {
                                 switch (editedCharTab) {
                                     case 0:
+                                        var character = Character.getFromString(editedCharacter.character)
+
                                         return (
-                                            <div className="tw-flex">
-                                                <div className={styles.inputBox} style={{width:"5rem", marginBottom:"1rem", marginTop:"2rem"}}>
-                                                    <Input type="number" name="luck" min="1" max="6"
-                                                        value={editedCharacter.luck} regpattern={regexPattern}
-                                                        onChange={e => setEditedCharacter({...editedCharacter, luck:e.target.value})}
-                                                    />
-                                                    <label>
-                                                        Chance
-                                                    </label>
+                                            <div className=" tw-grid tw-grid-rows-3" style={{display:"grid", gridTemplateRows:"repeat(2, auto)"}}>
+                                                <div className="tw-flex">
+                                                    <div className={styles.inputBox} style={{width:"5rem", marginBottom:"1rem", marginTop:"2rem"}}>
+                                                        <Input type="number" name="luck" min="1" max="6"
+                                                            value={editedCharacter.luck} regpattern={regexPattern}
+                                                            onChange={e => setEditedCharacter({...editedCharacter, luck:e.target.value})}
+                                                        />
+                                                        <label>
+                                                            Chance
+                                                        </label>
+                                                    </div>
+
+                                                    <div className={styles.inputBox} style={{width:"30rem", marginBottom:"1rem", marginTop:"2rem", borderBottom:"none"}}>
+                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mt-4 tw-mr-4"
+                                                            onClick={() => {editedCharacter.level > 0 ? (setEditedCharacter({...editedCharacter, level:parseInt(editedCharacter.level)-1, availablePoints:parseInt(editedCharacter.availablePoints)-1})) : (null)}}>
+                                                            Diminuer
+                                                        </button>
+                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mt-4"
+                                                            onClick={() => {
+                                                                    setEditedCharacter({...editedCharacter, level:parseInt(editedCharacter.level)+1, availablePoints:parseInt(editedCharacter.availablePoints)+1})
+                                                                }}>
+                                                            Augmenter
+                                                        </button>
+                                                        <label style={{transform:"translateY(-90%)", left:"3.5%"}}>
+                                                            Niveau ({editedCharacter.level} actuel)
+                                                        </label>
+                                                    </div>
                                                 </div>
 
-                                                <div className={styles.inputBox} style={{width:"30rem", marginBottom:"1rem", marginTop:"2rem", borderBottom:"none"}}>
-                                                    <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mt-4 tw-mr-4"
-                                                        onClick={() => {editedCharacter.level > 0 ? (setEditedCharacter({...editedCharacter, level:parseInt(editedCharacter.level)-1})) : (null)}}>
-                                                        Diminuer
-                                                    </button>
-                                                    <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mt-4"
-                                                        onClick={() => setEditedCharacter({...editedCharacter, level:parseInt(editedCharacter.level)+1})}>
-                                                        Augmenter
-                                                    </button>
-                                                    <label style={{transform:"translateY(-90%)", left:"3.5%"}}>
-                                                        Niveau ({editedCharacter.level} actuel)
-                                                    </label>
+                                                <hr style={{marginLeft:"1.1rem", marginRight:"9rem", marginBottom:"0.75rem", marginTop:"1rem"}}/>
+
+                                                <div key="abilities" className={styles.abilities}>
+                                                    <div key="constitutionAbilities" className={styles.constCat}>
+                                                        <div key="Constitution" className={styles.abilityMain}>
+                                                            <input type="number" name="constitutionAbilitiesCatLevel" style={{width: 40}} min="0" max="13"
+                                                                value={character.constitutionAbilities.categoryLevel} readOnly/> 
+                                                            <label>Constitution</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.constitutionAbilities.categoryLevel = parseInt(character.constitutionAbilities.categoryLevel)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.constitutionAbilities.categoryLevel = parseInt(character.constitutionAbilities.categoryLevel)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Force" className={styles.ability}>
+                                                            <input type="number" name="constitutionAbilities0Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.constitutionAbilities.abilities[0].level} readOnly/> 
+                                                            <label>Force</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.constitutionAbilities.abilities[0].level = parseInt(character.constitutionAbilities.abilities[0].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.constitutionAbilities.abilities[0].level = parseInt(character.constitutionAbilities.abilities[0].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Resistance" className={styles.ability}>
+                                                            <input type="number" name="constitutionAbilities1Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.constitutionAbilities.abilities[1].level} readOnly/> 
+                                                            <label>Résistance</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.constitutionAbilities.abilities[1].level = parseInt(character.constitutionAbilities.abilities[1].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.constitutionAbilities.abilities[1].level = parseInt(character.constitutionAbilities.abilities[1].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                    </div>
+
+                                                    <br/>
+
+                                                    <div key="mentalAbilities" className={styles.mentCat}>
+                                                        <div key="Mental" className={styles.abilityMain}>
+                                                            <input type="number" name="mentalAbilitiesCatLevel" style={{width: 40}} min="0" max="13"
+                                                                value={character.mentalAbilities.categoryLevel} readOnly/> 
+                                                            <label>Mental</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.mentalAbilities.categoryLevel = parseInt(character.mentalAbilities.categoryLevel)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.mentalAbilities.categoryLevel = parseInt(character.mentalAbilities.categoryLevel)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Intellect" className={styles.ability}>
+                                                            <input type="number" name="mentalAbilities0Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.mentalAbilities.abilities[0].level} readOnly/> 
+                                                            <label>Intellect</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.mentalAbilities.abilities[0].level = parseInt(character.mentalAbilities.abilities[0].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.mentalAbilities.abilities[0].level = parseInt(character.mentalAbilities.abilities[0].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Eloquence" className={styles.ability}>
+                                                            <input type="number" name="mentalAbilities1Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.mentalAbilities.abilities[1].level} readOnly/> 
+                                                            <label>Éloquence</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.mentalAbilities.abilities[1].level = parseInt(character.mentalAbilities.abilities[1].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.mentalAbilities.abilities[1].level = parseInt(character.mentalAbilities.abilities[1].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                    </div>
+
+                                                    <br/>
+
+                                                    <div key="dexteriteAbilities" className={styles.dextCat}>
+                                                        <div key="Dexterite" className={styles.abilityMain}>
+                                                            <input type="number" name="dexteriteAbilitiesCatLevel" style={{width: 40}} min="0" max="13"
+                                                                value={character.dexteriteAbilities.categoryLevel} readOnly/> 
+                                                            <label>Déxtérité</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.dexteriteAbilities.categoryLevel = parseInt(character.dexteriteAbilities.categoryLevel)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.dexteriteAbilities.categoryLevel = parseInt(character.dexteriteAbilities.categoryLevel)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Agilite" className={styles.ability}>
+                                                            <input type="number" name="dexteriteAbilities0Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.dexteriteAbilities.abilities[0].level} readOnly/> 
+                                                            <label>Agilité</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.dexteriteAbilities.abilities[0].level = parseInt(character.dexteriteAbilities.abilities[0].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.dexteriteAbilities.abilities[0].level = parseInt(character.dexteriteAbilities.abilities[0].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Furtivite" className={styles.ability}>
+                                                            <input type="number" name="dexteriteAbilities1Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.dexteriteAbilities.abilities[1].level} readOnly/> 
+                                                            <label>Furtivité</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.dexteriteAbilities.abilities[1].level = parseInt(character.dexteriteAbilities.abilities[1].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.dexteriteAbilities.abilities[1].level = parseInt(character.dexteriteAbilities.abilities[1].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                    </div> 
+
+                                                    <br/>
+
+                                                    <div key="survieAbilities" className={styles.survCat}>
+                                                        <div key="Survie" className={styles.abilityMain}>
+                                                            <input type="number" name="survieAbilitiesCatLevel" style={{width: 40}} min="0" max="13"
+                                                                value={character.survieAbilities.categoryLevel} readOnly/> 
+                                                            <label>Survie</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.survieAbilities.categoryLevel = parseInt(character.survieAbilities.categoryLevel)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.survieAbilities.categoryLevel = parseInt(character.survieAbilities.categoryLevel)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Perception" className={styles.ability}>
+                                                            <input type="number" name="survieAbilities0Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.survieAbilities.abilities[0].level} readOnly/> 
+                                                            <label>Perception</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.survieAbilities.abilities[0].level = parseInt(character.survieAbilities.abilities[0].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.survieAbilities.abilities[0].level = parseInt(character.survieAbilities.abilities[0].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Savoir-faire" className={styles.ability}>
+                                                            <input type="number" name="survieAbilities1Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.survieAbilities.abilities[1].level} readOnly/> 
+                                                            <label>Savoir-faire</label>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.survieAbilities.abilities[1].level = parseInt(character.survieAbilities.abilities[1].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.survieAbilities.abilities[1].level = parseInt(character.survieAbilities.abilities[1].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                    </div>
+
+                                                    <div key="specialAbilities1" className={styles.spe1Cat}>
+                                                        <div key="Special1Cat" className={styles.abilityMain}>
+                                                            <input type="number" name="specialAbilities1CatLevel" style={{width: 40}} min="0" max="13"
+                                                                value={character.specialAbilities1.categoryLevel} readOnly/> 
+                                                            <input type="text" name="specialAbilities1CatName" size={13} className="tw-ml-3" readOnly
+                                                                value={character.specialAbilities1.name}/>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities1.categoryLevel = parseInt(character.specialAbilities1.categoryLevel)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities1.categoryLevel = parseInt(character.specialAbilities1.categoryLevel)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Special0" className={styles.ability}>
+                                                            <input type="number" name="specialAbilities1Ab0Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.specialAbilities1.abilities[0].level} readOnly/> 
+                                                            <Input type="text" name="specialAbilities1Ab0Name" size={13} className="tw-ml-3" style={{background:"transparent"}}
+                                                                value={character.specialAbilities1.abilities[0].name} regpattern={regexPattern} readOnly/>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities1.abilities[0].level = parseInt(character.specialAbilities1.abilities[0].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities1.abilities[0].level = parseInt(character.specialAbilities1.abilities[0].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Special1" className={styles.ability}>
+                                                            <input type="number" name="specialAbilities1Ab1Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.specialAbilities1.abilities[1].level} readOnly/> 
+                                                            <Input type="text" name="specialAbilities1Ab1Name" size={13} className="tw-ml-3" style={{background:"transparent"}}
+                                                                value={character.specialAbilities1.abilities[1].name} regpattern={regexPattern} readOnly/>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities1.abilities[1].level = parseInt(character.specialAbilities1.abilities[1].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities1.abilities[1].level = parseInt(character.specialAbilities1.abilities[1].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Special2" className={styles.ability}>
+                                                            <input type="number" name="specialAbilities1Ab2Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.specialAbilities1.abilities[2].level} readOnly/> 
+                                                            <Input type="text" name="specialAbilities1Ab2Name" size={13} className="tw-ml-3" style={{background:"transparent"}}
+                                                                value={character.specialAbilities1.abilities[2].name} regpattern={regexPattern} readOnly/>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities1.abilities[2].level = parseInt(character.specialAbilities1.abilities[2].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities1.abilities[2].level = parseInt(character.specialAbilities1.abilities[2].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                    </div>
+
+                                                    <div key="specialAbilities2" className={styles.spe2Cat}>
+                                                        <div key="specialAbilities2" className={styles.abilityMain}>
+                                                            <input type="number" name="specialAbilities2CatLevel" style={{width: 40}} min="0" max="13"
+                                                                value={character.specialAbilities2.categoryLevel} readOnly/> 
+                                                            <input type="text" name="specialAbilities2CatName" size={13} className="tw-ml-3" readOnly
+                                                                value={character.specialAbilities2.name}
+                                                                onChange={e => editAbiltyCatName(setSpecialAbilities2, specialAbilities2, e)}/>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities2.categoryLevel = parseInt(character.specialAbilities2.categoryLevel)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities2.categoryLevel = parseInt(character.specialAbilities2.categoryLevel)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Special0" className={styles.ability}>
+                                                            <input type="number" name="specialAbilities2Ab0Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.specialAbilities2.abilities[0].level} readOnly/> 
+                                                            <Input type="text" name="specialAbilities2Ab0Name" size={13} className="tw-ml-3" style={{background:"transparent"}}
+                                                                value={character.specialAbilities2.abilities[0].name} regpattern={regexPattern} readOnly/>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities2.abilities[0].level = parseInt(character.specialAbilities2.abilities[0].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities2.abilities[0].level = parseInt(character.specialAbilities2.abilities[0].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Special1" className={styles.ability}>
+                                                            <input type="number" name="specialAbilities2Ab1Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.specialAbilities2.abilities[1].level} readOnly/> 
+                                                            <Input type="text" name="specialAbilities2Ab1Name" size={13} className="tw-ml-3" style={{background:"transparent"}}
+                                                                value={character.specialAbilities2.abilities[1].name} regpattern={regexPattern} readOnly/>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities2.abilities[1].level = parseInt(character.specialAbilities2.abilities[1].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities2.abilities[1].level = parseInt(character.specialAbilities2.abilities[1].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                        <div key="Special2" className={styles.ability}>
+                                                            <input type="number" name="specialAbilities2Ab2Level" style={{width: 40}} min="0" max="13"
+                                                                value={character.specialAbilities2.abilities[2].level} readOnly/> 
+                                                            <Input type="text" name="specialAbilities2Ab2Name" size={13} className="tw-ml-3" style={{background:"transparent"}}
+                                                                value={character.specialAbilities2.abilities[2].name} regpattern={regexPattern} readOnly/>
+                                                            {(() => {
+                                                                if (editedCharacter.availablePoints > 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities2.abilities[2].level = parseInt(character.specialAbilities2.abilities[2].level)+1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)-1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    )
+                                                                } else if (editedCharacter.availablePoints < 0) {
+                                                                    return (
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-2 tw-py-0 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded"
+                                                                            onClick={() => {
+                                                                                character.specialAbilities2.abilities[2].level = parseInt(character.specialAbilities2.abilities[2].level)-1;
+                                                                                setEditedCharacter({
+                                                                                    ...editedCharacter, 
+                                                                                    availablePoints:parseInt(editedCharacter.availablePoints)+1,
+                                                                                    character: character.toString()
+                                                                                })
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                    )
+                                                                }
+                                                            })()}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        ) // TODO Liste des points de compétences + points des levels à choisir 
+                                        ) 
                         
                                     case 1:
                                         return (
@@ -367,6 +1132,58 @@ export default function GamesPage() {
                             </div>
                         )
                     })}
+                </Dialog>
+
+                <Dialog title="Nouveau point de compétence" onClose={onClose} disableOkButton={true} searchParam="newCompPoint">
+                    {(() => {
+                        if (useSearchParams().get("newCompPoint") === 'y') {
+                            var character = Character.getFromString(editedCharacter.character);
+                            return (
+                                <div className="tw-dark tw-text-foreground tw-bg-background tw-p-8 tw-flex tw-items-start tw-justify-center">
+                                    <Dropdown color={"black"}>
+                                      <DropdownTrigger>
+                                        <button
+                                        >
+                                          Open Menu
+                                        </button>
+                                      </DropdownTrigger>
+                                      <DropdownMenu variant="faded" aria-label="Dropdown menu with description" style={{backgroundColor:"black"}}>
+                                      <DropdownSection title="Actions" showDivider>  
+                                        <DropdownItem
+                                            key="new"
+                                            description="Create a new file"
+                                          >
+                                            New file
+                                          </DropdownItem>
+                                          <DropdownItem
+                                            key="copy"
+                                            description="Copy the file link"
+                                          >
+                                            Copy link
+                                          </DropdownItem>
+                                          <DropdownItem
+                                            key="edit"
+                                            description="Allows you to edit the file"
+                                          >
+                                            Edit file
+                                          </DropdownItem>
+                                        </DropdownSection>
+                                        <DropdownSection title="Danger zone">  
+                                          <DropdownItem
+                                            key="delete"
+                                            className="text-danger"
+                                            color="danger"
+                                            description="Permanently delete the file"
+                                          >
+                                            Delete file
+                                          </DropdownItem>
+                                        </DropdownSection>
+                                      </DropdownMenu>
+                                    </Dropdown>
+                                </div>
+                            )
+                        }
+                    })()}
                 </Dialog>
 
                 <AnimatedGradient>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ionic/react": "^7.4.2",
+    "@nextui-org/dropdown": "^2.1.10",
     "autoprefixer": "10.4.15",
     "cookies-next": "^4.0.0",
     "crypto-js": "^4.1.1",

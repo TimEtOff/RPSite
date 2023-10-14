@@ -47,6 +47,7 @@ export default async function handler(req, res) {
              *    userName,
              *    luck, 
              *    level,
+             *    availablePoints,
              *    character (Character class),
              *    inventory: [{
              *        (Item class)
