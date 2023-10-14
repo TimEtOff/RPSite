@@ -6,19 +6,13 @@ import styles from "../styles/character.module.css"
 import styles2 from '../styles/Home.module.css';
 import stylesList from '../styles/components/character-list.module.css';
 import stylesGame from '../styles/games.module.css'
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Character } from "@/components/character/character";
 import { getCookie, hasCookie } from "cookies-next";
-import { Ability } from "@/components/character/ability";
-import { AbilityCategory } from "@/components/character/ability-category";
 import GamesList from "@/components/games-list";
 import Dialog from "@/components/dialog";
 import Router from "next/router";
 import Input from "@/components/input";
-import { useSearchParams } from "next/navigation";
-import {Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem} from "@nextui-org/dropdown";
-const CharacterList = dynamic(() => import('../components/character-list'), { ssr: false })
 
 function makeid(length) {
     let result = '';
@@ -109,6 +103,8 @@ export default function GamesPage() {
                 characterId: character.characterId + "-" + makeid(4),
                 userName: character.userName,
                 luck: 0,
+                level: 0,
+                availablePoints: 0,
                 character: character.character,
                 inventory: []
             });
@@ -1132,58 +1128,6 @@ export default function GamesPage() {
                             </div>
                         )
                     })}
-                </Dialog>
-
-                <Dialog title="Nouveau point de compétence" onClose={onClose} disableOkButton={true} searchParam="newCompPoint">
-                    {(() => {
-                        if (useSearchParams().get("newCompPoint") === 'y') {
-                            var character = Character.getFromString(editedCharacter.character);
-                            return (
-                                <div className="tw-dark tw-text-foreground tw-bg-background tw-p-8 tw-flex tw-items-start tw-justify-center">
-                                    <Dropdown color={"black"}>
-                                      <DropdownTrigger>
-                                        <button
-                                        >
-                                          Open Menu
-                                        </button>
-                                      </DropdownTrigger>
-                                      <DropdownMenu variant="faded" aria-label="Dropdown menu with description" style={{backgroundColor:"black"}}>
-                                      <DropdownSection title="Actions" showDivider>  
-                                        <DropdownItem
-                                            key="new"
-                                            description="Create a new file"
-                                          >
-                                            New file
-                                          </DropdownItem>
-                                          <DropdownItem
-                                            key="copy"
-                                            description="Copy the file link"
-                                          >
-                                            Copy link
-                                          </DropdownItem>
-                                          <DropdownItem
-                                            key="edit"
-                                            description="Allows you to edit the file"
-                                          >
-                                            Edit file
-                                          </DropdownItem>
-                                        </DropdownSection>
-                                        <DropdownSection title="Danger zone">  
-                                          <DropdownItem
-                                            key="delete"
-                                            className="text-danger"
-                                            color="danger"
-                                            description="Permanently delete the file"
-                                          >
-                                            Delete file
-                                          </DropdownItem>
-                                        </DropdownSection>
-                                      </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-                            )
-                        }
-                    })()}
                 </Dialog>
 
                 <AnimatedGradient>

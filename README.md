@@ -6,7 +6,6 @@
     - `cookies-next`
     - `fs`
     - `--save-dev typescript @types/react @types/node`
-    - `@nextui-org/dropdown`
     - *(`crypto-js` can be used for password encryption)*
 - Pull github repository.
 - Create `json/` folder with these files:
