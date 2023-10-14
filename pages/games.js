@@ -230,7 +230,7 @@ export default function GamesPage() {
                                                     <div className={styles.inputBox} style={{width:"5rem", marginBottom:"1rem", marginTop:"2rem"}}>
                                                         <Input type="number" name="luck" min="1" max="6"
                                                             value={editedCharacter.luck} regpattern={regexPattern}
-                                                            onChange={e => setEditedCharacter({...editedCharacter, luck:e.target.value})}
+                                                            onChange={e => setEditedCharacter({...editedCharacter, luck:parseInt(e.target.value)})}
                                                         />
                                                         <label>
                                                             Chance
@@ -1087,6 +1087,41 @@ export default function GamesPage() {
 
                         <button className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-9 tw-mt-1">
                             Sauvegarder
+                        </button>
+
+                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-9 tw-mt-6"
+                            onClick={() => {
+                                var newChars = editedGame.characters;
+                                function compare( a, b ) {
+                                    if ( a.luck < b.luck ){
+                                      return 1;
+                                    }
+                                    if ( a.luck > b.luck ){
+                                      return -1;
+                                    }
+                                    return 0;
+                                }
+                                newChars = newChars.sort(compare);
+                                setEditedGame({...editedGame, characters:newChars})
+
+                                fetch('/api/games/update-game', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(editedGame),
+                                }).then((res) => {
+                                    alert("Personnages de la partie \"" + editedGame.name + "\" classés par chance.")
+                                    Router.push({
+                                        pathname: '/games'
+                                      }, 
+                                      undefined, { shallow: true }
+                                    )
+                                    setNeedReload(!needReload);
+                                })
+                                
+                            }}>
+                            Classer les personnages par chance
                         </button>
                     </form>
                 )
