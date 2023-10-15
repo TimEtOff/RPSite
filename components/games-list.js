@@ -274,10 +274,23 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
                 var character = Character.getFromString(characterData.character);
             return (
                 <div key={characterData.characterId} className={styles.character} suppressHydrationWarning>
-                    <h1 style={{paddingTop:8}}>
-                        {character.getFullName() + " (C" + characterData.luck + ")"}
-                        <p className="tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.2}}><i>par {characterData.userName}</i></p>
-                    </h1>
+                    {(() => {
+                        if (character.health <= 0 || character.energy <= 0) {
+                            return (
+                            <h1 style={{paddingTop:8}}>
+                                <s>{character.getFullName() + " (C" + characterData.luck + ")"}</s>
+                                <p className="tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.2}}><i>par {characterData.userName}</i></p>
+                            </h1>
+                            )
+                        } else {
+                            return(
+                            <h1 style={{paddingTop:8}}>
+                                {character.getFullName() + " (C" + characterData.luck + ")"}
+                                <p className="tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.2}}><i>par {characterData.userName}</i></p>
+                            </h1>
+                            )
+                        }
+                    })()}
 
                     <ul>
                         <li>
