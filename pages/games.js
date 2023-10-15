@@ -226,9 +226,39 @@ export default function GamesPage() {
                                         var character = Character.getFromString(editedCharacter.character)
 
                                         return (
-                                            <div className=" tw-grid tw-grid-rows-3" style={{display:"grid", gridTemplateRows:"repeat(2, auto)"}}>
+                                            <div className=" tw-grid tw-grid-rows-3" style={{display:"grid", gridTemplateRows:"repeat(3, auto)"}}>
                                                 <div className="tw-flex">
-                                                    <div className={styles.inputBox} style={{width:"5rem", marginBottom:"1rem", marginTop:"2rem"}}>
+                                                    <div className={styles.inputBox} style={{width:"5rem", marginBottom:"0.25rem", marginTop:"1.5rem"}}>
+                                                        <Input type="number" name="health" min="0" max="8"
+                                                            value={character.health} regpattern={regexPattern}
+                                                            onChange={(e) => {
+                                                                character.health = e.target.value;
+                                                                setEditedCharacter({...editedCharacter, character:character.toString()})
+                                                            }}
+                                                        />
+                                                        <label>
+                                                            Vie
+                                                        </label>
+                                                    </div>
+
+                                                    <div className={styles.inputBox} style={{width:"5rem", marginBottom:"0.25rem", marginTop:"1.5rem"}}>
+                                                        <Input type="number" name="energy" min="0" max="8"
+                                                            value={character.energy} regpattern={regexPattern}
+                                                            onChange={(e) => {
+                                                                character.energy = e.target.value;
+                                                                setEditedCharacter({...editedCharacter, character:character.toString()})
+                                                            }}
+                                                        />
+                                                        <label>
+                                                            Énergie
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <p style={{marginLeft:"1rem", color:"grey"}}><i>1 unité = 1/2 graphiquement</i></p>
+
+                                                <div className="tw-flex">
+                                                    <div className={styles.inputBox} style={{width:"5rem", marginBottom:"1rem", marginTop:"1.5rem"}}>
                                                         <Input type="number" name="luck" min="1" max="6"
                                                             value={editedCharacter.luck} regpattern={regexPattern}
                                                             onChange={e => setEditedCharacter({...editedCharacter, luck:parseInt(e.target.value)})}
@@ -238,7 +268,7 @@ export default function GamesPage() {
                                                         </label>
                                                     </div>
 
-                                                    <div className={styles.inputBox} style={{width:"30rem", marginBottom:"1rem", marginTop:"2rem", borderBottom:"none"}}>
+                                                    <div className={styles.inputBox} style={{width:"30rem", marginBottom:"1rem", marginTop:"1.5rem", borderBottom:"none"}}>
                                                         <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mt-4 tw-mr-4"
                                                             onClick={() => {editedCharacter.level > 0 ? (setEditedCharacter({...editedCharacter, level:parseInt(editedCharacter.level)-1, availablePoints:parseInt(editedCharacter.availablePoints)-1})) : (null)}}>
                                                             Diminuer

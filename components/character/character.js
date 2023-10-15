@@ -5,8 +5,8 @@ class Character {
 
     name;
     lastname;
-    health = 4;
-    energy = 4;
+    health = 8;
+    energy = 8;
 
     constitutionAbilities = new AbilityCategory(false, "Constitution", 0, [new Ability("Force", 0), new Ability("R\u00e9sistance", 0)]);
     mentalAbilities = new AbilityCategory(false, "Mental", 0, [new Ability("Intellect", 0), new Ability("Eloquence", 0)]);
