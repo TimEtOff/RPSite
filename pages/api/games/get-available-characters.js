@@ -25,17 +25,15 @@ function getChars(id, gameId, objectData, objectDataUsers) {
 
     while (i != length) {
         var actualData = objectData[i]
-        if (actualData.id === id) {
-            if (actualData.gameId === gameId) {
-                var username = getUserName(id, objectDataUsers);
-                allChars.push({
-                    id: actualData.id,
-                    gameId: actualData.id,
-                    characterId: actualData.characterId,
-                    character: actualData.character,
-                    userName: username
-                });
-            }
+        if (actualData.gameId === gameId) {
+            var username = getUserName(actualData.id, objectDataUsers);
+            allChars.push({
+                id: actualData.id,
+                gameId: actualData.id,
+                characterId: actualData.characterId,
+                character: actualData.character,
+                userName: username
+            });
         }
         i++;
     }

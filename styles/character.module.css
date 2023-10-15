@@ -58,7 +58,7 @@
   color: white;
   margin-left: 3%;
   margin-right: 2%;
-  margin-top:2%;
+  margin-top: 2%;
 }
 
 .characterForm h1 {
@@ -128,12 +128,14 @@
 .abilityMain {
   margin-top: 5px;
   margin-bottom: 5px;
+  display: flex;
 }
 
 .ability {
   margin-left: 20px;
   margin-top: 5px;
   margin-bottom: 5px;
+  display: flex;
 }
 
 .ability input[type=number],
@@ -152,6 +154,7 @@
   border-bottom: solid 2px;
   border-radius: 0;
   outline: none;
+  padding-left: 5px;
 }
 
 .abilityMain input[type=text] {
@@ -160,6 +163,7 @@
   border-bottom: solid 2px;
   border-radius: 0;
   outline: none;
+  padding-left: 5px;
 }
 
 .constCat {

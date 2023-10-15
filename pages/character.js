@@ -49,6 +49,29 @@ export default function CharacterPage() {
         }
     }
 
+    function getTotalPoints() {
+        return parseInt(constitutionAbilities.categoryLevel) +
+            parseInt(constitutionAbilities.abilities[0].level) +
+            parseInt(constitutionAbilities.abilities[1].level) +
+            parseInt(mentalAbilities.categoryLevel) +
+            parseInt(mentalAbilities.abilities[0].level) +
+            parseInt(mentalAbilities.abilities[1].level) +
+            parseInt(dexteriteAbilities.categoryLevel) +
+            parseInt(dexteriteAbilities.abilities[0].level) +
+            parseInt(dexteriteAbilities.abilities[1].level) +
+            parseInt(survieAbilities.categoryLevel) +
+            parseInt(survieAbilities.abilities[0].level) +
+            parseInt(survieAbilities.abilities[1].level) +
+            parseInt(specialAbilities1.categoryLevel) +
+            parseInt(specialAbilities1.abilities[0].level) +
+            parseInt(specialAbilities1.abilities[1].level) +
+            parseInt(specialAbilities1.abilities[2].level) +
+            parseInt(specialAbilities2.categoryLevel) + 
+            parseInt(specialAbilities2.abilities[0].level) +
+            parseInt(specialAbilities2.abilities[1].level) +
+            parseInt(specialAbilities2.abilities[2].level)
+    }
+
     function handleSubmit(e) {
         // Prevent the browser from reloading the page
         e.preventDefault();
@@ -217,7 +240,7 @@ export default function CharacterPage() {
                             </div>
 
                             <div className="tw-flex">
-                                <h1>Capacités</h1> <p className="tw-ml-2 tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.7}}><i>(13pts/capacité, 80pts max)</i></p>
+                                <h1>Capacités {getTotalPoints()}/80</h1> <p className="tw-ml-2 tw-text-sm tw-text-neutral-400" style={{lineHeight: 1.7}}><i>(13pts max/capacité)</i></p>
                             </div>
 
                             <div key="abilities" className={styles.abilities}>
