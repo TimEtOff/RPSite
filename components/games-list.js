@@ -162,7 +162,8 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
                         name: editedGame.name,
                         specialCat1: editedGame.specialCat1,
                         specialCat2: editedGame.specialCat2,
-                        characters: characters
+                        characters: characters,
+                        inventory: editedGame.inventory
                     }),
                 })
 

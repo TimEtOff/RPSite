@@ -120,7 +120,8 @@ export default function GamesPage() {
                     name: editedGame.name,
                     specialCat1: editedGame.specialCat1,
                     specialCat2: editedGame.specialCat2,
-                    characters: characters
+                    characters: characters,
+                    inventory: editedGame.inventory
                 }),
             })
 
@@ -1116,7 +1117,7 @@ export default function GamesPage() {
                 // When the game is edited
                 return (
                     <form onSubmit={handleSubmitGame}>
-                        <div className={styles.name} style={{display:"grid", gridTemplateRows:"repeat(2, auto)", height:"auto", }}>
+                        <div className={styles.name} style={{display:"grid", gridTemplateRows:"repeat(2, auto)", height:"auto", marginLeft:"0", marginTop:"0"}}>
                             <div className="tw-flex">
                                 <div className={styles.inputBox} style={{marginBottom:"20px"}}>
                                     <Input type="text" name="name"
@@ -1161,11 +1162,88 @@ export default function GamesPage() {
                             </div>
                         </div>
 
-                        <button className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-9 tw-mt-1">
+                        <div style={{display: "flex", marginLeft:"-1rem"}}>
+                            <h1>Inventaire global</h1>
+                                                    <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3"
+                                                        onClick={() => {
+                                                            var newInv = editedGame.inventory;
+                                                            newInv.push({
+                                                                itemId: makeid(5),
+                                                                name: "Nouvel objet",
+                                                                count: 1
+                                                            })
+                                                            setEditedGame({...editedGame, inventory: newInv})
+                                                            setNeedReload(!needReload)
+                                                        }}>
+                                                        Ajouter un objet
+                                                    </button>
+                                                </div>
+
+                        <div style={{
+                                                    width: "95%",
+                                                    height: "45vh",
+                                                    background: "#303030",
+                                                    margin: "2.7%",
+                                                    marginLeft: "0.75rem",
+                                                    marginBottom: "2%",
+                                                    overflowX: "hidden",
+                                                    overflowY: "auto",
+                                                    borderRadius: "20px"
+                                                }}>
+                                                    <div style={{display:"grid", gridTemplateRows:"repeat(auto, auto)"}}>
+                                                        {editedGame.inventory.map((item) => {
+                                                            return (
+                                                                <div className="tw-flex" key={item.itemId} style={{borderBottom:"solid 2px #AAAAAA25"}}>
+                                                                    <div className={styles.inputBox} style={{marginLeft:"1.3rem", marginTop:"0.10rem", marginBottom:"0.75rem", width:"15rem"}}>
+                                                                        <Input value={item.name} 
+                                                                        onChange={(e) => {item.name = e.target.value; setEditedGame({...editedGame}); setNeedReload(!needReload)}}/>
+                                                                    </div>
+                                                                    <h1 style={{margin:"1rem 1vh 0 0"}}> x{item.count}</h1>
+                                                                    <div style={{marginTop:"0.7rem"}}>
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-4 tw-py-2 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-ml-2"
+                                                                            onClick={() => {
+                                                                                item.count -= 1;
+                                                                                if (item.count <= 0) {
+                                                                                    if (confirm("Supprimer cet objet (" + item.name + ") ?")) {
+                                                                                        var i = 0;
+                                                                                        var newInv = editedGame.inventory;
+                                                                                        while (i != Object.entries(editedGame.inventory).length) {
+                                                                                            if (editedGame.inventory[i].itemId == item.itemId) {
+                                                                                                newInv.splice(i, 1);
+                                                                                                break;
+                                                                                            }
+                                                                                            i++;
+                                                                                        }
+                                                                                        setEditedGame({...editedGame, inventory:newInv})
+                                                                                    } else {
+                                                                                        item.count += 1;
+                                                                                    }
+                                                                                }
+                                                                                setEditedGame({...editedGame});
+                                                                                setNeedReload(!needReload);
+                                                                            }}>
+                                                                            -
+                                                                        </button>
+                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-4 tw-py-2 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-ml-2"
+                                                                            onClick={() => {
+                                                                                item.count += 1;
+                                                                                setEditedGame({...editedGame});
+                                                                                setNeedReload(!needReload);
+                                                                            }}>
+                                                                            +
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                </div>
+
+                        <button className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-mt-1">
                             Sauvegarder
                         </button>
 
-                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-9 tw-mt-6"
+                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-4 tw-mt-1 tw-mb-4"
                             onClick={() => {
                                 var newChars = editedGame.characters;
                                 function compare( a, b ) {

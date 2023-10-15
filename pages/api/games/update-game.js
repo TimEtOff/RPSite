@@ -28,7 +28,7 @@ export default async function handler(req, res) {
             const objectData = JSON.parse(jsonData);
         
             // Get the data from the request body
-            const { id, gameId, name, specialCat1, specialCat2, characters } = req.body;
+            const { id, gameId, name, specialCat1, specialCat2, characters, inventory } = req.body;
 
             // Add the new data to the object
             const newData = {
@@ -37,7 +37,8 @@ export default async function handler(req, res) {
                 name,
                 specialCat1,
                 specialCat2,
-                characters
+                characters,
+                inventory
             };
             /**
              * characters model:

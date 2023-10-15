@@ -24,7 +24,8 @@ export default async function handler(req, res) {
               name: "Nouvelle partie",
               specialCat1: "",
               specialCat2: "",
-              characters: []
+              characters: [],
+              inventory: []
             };
             
             objectData.push(newData);

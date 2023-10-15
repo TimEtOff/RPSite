@@ -49,6 +49,7 @@ export default function CharacterList({ editCharacter }) {
     function deleteCharacter(param) {
         return function (e) {
             if (hasCookie('id')) {
+                if(confirm("Supprimer le personnage ?")) {
                 var id = getCookie('id');
                 fetch('/api/character/delete-character', {
                     method: 'POST',
@@ -67,6 +68,7 @@ export default function CharacterList({ editCharacter }) {
                     i++;
                 }
                 setCharacters(newChars);
+                }
             } else {
                 alert("Vous n'êtes pas connecté");
             }
