@@ -17,6 +17,7 @@ const CharacterList = dynamic(() => import('../components/character-list'), { ss
 
 export default function CharacterPage() {
 
+    const [needReload, setNeedReload] = useState(false);
     const [characterData, setCharacterData] = useState(null);
 
     const [name, setName] = useState("");
@@ -150,6 +151,7 @@ export default function CharacterPage() {
             }).then((res) => {
                 alert("Personnage \"" + character.getFullName() + "\" sauvegardé")
                 editCharacter(characterData)();
+                setNeedReload(!needReload);
             })
         })
         
@@ -204,11 +206,11 @@ export default function CharacterPage() {
 
                 <div className="height:80vh tw-container">
                     <div className={styles.characters} suppressHydrationWarning>
-                        <CharacterList editCharacter={editCharacter}/>
+                        <CharacterList editCharacter={editCharacter} needReload={needReload}/>
                     </div>
 
                     <div className={styles.characterForm} suppressHydrationWarning>
-                        <form onSubmit={handleSubmit}>
+                        {characterData != null ? (<form onSubmit={handleSubmit}>
 
                             <div className={styles.name}>
                                 <div className={styles.inputBox}>
@@ -408,7 +410,10 @@ export default function CharacterPage() {
                             <button className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-9 tw-mt-1">
                                 Sauvegarder
                             </button>
-                        </form>
+                        </form>) : (
+                            <h1 className="tw-text-center tw-text-xl" style={{paddingTop:"47%", margin:0}}
+                            >Veillez sélectionner un élément à éditer</h1>
+                        )}
                     </div>
                 </div>
             </main>

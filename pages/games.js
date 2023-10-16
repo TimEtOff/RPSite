@@ -80,6 +80,12 @@ export default function GamesPage() {
         }
     }
 
+    function gameReload(game) {
+        if (editedGame != null) {
+            setEditedGame(game);
+        }
+    }
+
     function reset() {
         setEditedGame(null);
         setEditedCharacter(null);
@@ -1365,6 +1371,7 @@ export default function GamesPage() {
                             editGame={editGame} 
                             addCharacter={addCharacter} 
                             editCharacter={editCharacter}
+                            gameReload={gameReload}
                             reset={reset}
                             needReload={needReload}/>
                     </div>

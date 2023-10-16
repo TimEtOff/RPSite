@@ -3,7 +3,7 @@ import { Character } from './character/character';
 import { setCookie, getCookie, hasCookie } from 'cookies-next';
 import styles from "../styles/components/character-list.module.css";
 
-export default function CharacterList({ editCharacter }) {
+export default function CharacterList({ editCharacter, needReload }) {
 
     const [characters, setCharacters] = useState(null)
     const [isLoading, setLoading] = useState(true)
@@ -96,6 +96,28 @@ export default function CharacterList({ editCharacter }) {
             setLoading(false);
         }
     }, [])
+
+    useEffect(() => {
+        var id = getCookie('id');
+
+        if (hasCookie('id')) {
+            fetch('/api/character/get-characters', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: id }),
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                setCharacters(json.characters)
+                setLoading(false)
+            })
+        } else {
+            setCharacters([{id: "null", characterId: "null", character: new Character("Non", "connecté").toString()}]);
+            setLoading(false);
+        }
+    }, [needReload])
  
     if (isLoading) return <p>Chargement...</p>
 

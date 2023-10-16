@@ -5,7 +5,7 @@ import styles from "../styles/components/character-list.module.css";
 import Dialog from './dialog';
 import Router from 'next/router';
 
-export default function GamesList({ editGame, addCharacter, editCharacter, reset, needReload }) {
+export default function GamesList({ editGame, addCharacter, editCharacter, gameReload, reset, needReload }) {
 
     const [games, setGames] = useState(null)
     const [isLoading, setLoading] = useState(true)
@@ -165,13 +165,15 @@ export default function GamesList({ editGame, addCharacter, editCharacter, reset
                         characters: characters,
                         inventory: editedGame.inventory
                     }),
-                })
+                }).then((res) => {
 
                 Router.push({
                     pathname: '/games',
                   }, 
                   undefined, { shallow: true }
                 )
+                gameReload(editedGame);
+            })
             }
         }
     }
