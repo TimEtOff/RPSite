@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="5px" height="16" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 5 16" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:guide x="5.586" y="13.053" angle="90"/>
+    <bx:guide x="3.037" y="2.965" angle="90"/>
+  </defs>
+  <path d="M 5.021 2.936 L 5.032 13.005 L 2.603 15.843 C 2.364 16.123 1.938 16.013 1.837 15.645 C 1.811 15.549 1.811 15.448 1.838 15.353 L 3.475 9.5 L 0.454 9.5 C 0.104 9.5 -0.114 9.084 0.061 8.75 C 0.078 8.717 0.1 8.685 0.124 8.657 L 5.021 2.936 Z" style=""/>
+</svg>

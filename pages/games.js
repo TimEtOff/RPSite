@@ -12,7 +12,13 @@ import { getCookie, hasCookie } from "cookies-next";
 import GamesList from "@/components/games-list";
 import Dialog from "@/components/dialog";
 import Router from "next/router";
+import Image from "next/image";
 import Input from "@/components/input";
+import HeartFill from "@/components/svg/heart-fill";
+import HeartHalfLeft from "@/components/svg/heart-lhalf";
+import HeartHalfRight from "@/components/svg/heart-rhalf";
+import EnergyHalfLeft from "@/components/svg/energy-lhalf";
+import EnergyHalfRight from "@/components/svg/energy-rhalf";
 
 function makeid(length) {
     let result = '';
@@ -153,12 +159,12 @@ export default function GamesPage() {
             alert("Partie \"" + editedGame.name + "\" sauvegardé")
             Router.push({
                 pathname: '/games'
-              }, 
+              },
               undefined, { shallow: true }
             )
             setNeedReload(!needReload);
         })
-        
+
     }
 
     function handleSubmitChar(e) {
@@ -192,12 +198,68 @@ export default function GamesPage() {
             alert("Partie \"" + editedGame.name + "\"/\"" + Character.getFromString(editedCharacter.character).getFullName() + "\" sauvegardé")
             Router.push({
                 pathname: '/games'
-              }, 
+              },
               undefined, { shallow: true }
             )
             setNeedReload(!needReload);
         })
-        
+
+    }
+
+    function getHeart(no, character) {
+
+        function setHealth() {
+            character.health = no;
+            setEditedCharacter({...editedCharacter, character:character.toString()})
+        }
+
+        var color = "#404040"
+        if (character.health >= no) {
+            color = "#b91c1c";
+        }
+
+        if (no == 1 && character.health == 1) {
+            return (<button type="button" onClick={() => {
+                character.health = 0;
+                setEditedCharacter({...editedCharacter, character:character.toString()})
+            }}><HeartHalfLeft style={{width:"0.8rem", height:"1.5rem", color:color}}/></button>)
+        } else if (no%2 == 0) {
+            if (no == 8) {
+                return (<button type="button" onClick={setHealth} style={{marginLeft:"-0.02rem"}}><HeartHalfRight style={{width:"0.8rem", height:"1.5rem", color:color}}/></button>)
+            } else {
+                return (<button type="button" onClick={setHealth} style={{marginLeft:"-0.01rem", marginRight:"0.5rem"}}><HeartHalfRight style={{width:"0.8rem", height:"1.5rem", color:color}}/></button>)
+            }
+        } else {
+            return (<button type="button" onClick={setHealth}><HeartHalfLeft style={{width:"0.8rem", height:"1.5rem", color:color}}/></button>)
+        }
+    }
+
+    function getEnergy(no, character) {
+
+        function setEnergy() {
+            character.energy = no;
+            setEditedCharacter({...editedCharacter, character:character.toString()})
+        }
+
+        var color = "#404040"
+        if (character.energy >= no) {
+            color = "#b9bd03";
+        }
+
+        if (no == 1 && character.energy == 1) {
+            return (<button type="button" onClick={() => {
+                character.energy = 0;
+                setEditedCharacter({...editedCharacter, character:character.toString()})
+            }}><EnergyHalfLeft style={{width:"0.5rem", height:"1.8rem", color:color}}/></button>)
+        } else if (no%2 == 0) {
+            if (no == 8) {
+                return (<button type="button" onClick={setEnergy}><EnergyHalfRight style={{width:"0.5rem", height:"1.8rem", color:color}}/></button>)
+            } else {
+                return (<button type="button" onClick={setEnergy} style={{marginRight:"0.5rem"}}><EnergyHalfRight style={{width:"0.5rem", height:"1.8rem", color:color}}/></button>)
+            }
+        } else {
+            return (<button type="button" onClick={setEnergy}><EnergyHalfLeft style={{width:"0.5rem", height:"1.8rem", color:color}}/></button>)
+        }
     }
 
     function getForm() {
@@ -234,7 +296,7 @@ export default function GamesPage() {
                                         return (
                                             <div className=" tw-grid tw-grid-rows-3" style={{display:"grid", gridTemplateRows:"repeat(3, auto)"}}>
                                                 <div className="tw-flex">
-                                                    <div className={styles.inputBox} style={{width:"5rem", marginBottom:"0.25rem", marginTop:"1.5rem"}}>
+                                                    <div className={styles.inputBox} style={{width:"8rem", marginBottom:"0.25rem", marginTop:"1.5rem"}}>
                                                         <Input type="number" name="health" min="0" max="8"
                                                             value={character.health} regpattern={regexPattern}
                                                             onChange={(e) => {
@@ -245,9 +307,19 @@ export default function GamesPage() {
                                                         <label>
                                                             Vie
                                                         </label>
+                                                        <div style={{position:"relative", marginTop:"0.7rem"}}>
+                                                            {getHeart(1, character)}
+                                                            {getHeart(2, character)}
+                                                            {getHeart(3, character)}
+                                                            {getHeart(4, character)}
+                                                            {getHeart(5, character)}
+                                                            {getHeart(6, character)}
+                                                            {getHeart(7, character)}
+                                                            {getHeart(8, character)}
+                                                        </div>
                                                     </div>
 
-                                                    <div className={styles.inputBox} style={{width:"5rem", marginBottom:"0.25rem", marginTop:"1.5rem"}}>
+                                                    <div className={styles.inputBox} style={{width:"5.6rem", marginBottom:"0.25rem", marginTop:"1.5rem"}}>
                                                         <Input type="number" name="energy" min="0" max="8"
                                                             value={character.energy} regpattern={regexPattern}
                                                             onChange={(e) => {
@@ -258,10 +330,20 @@ export default function GamesPage() {
                                                         <label>
                                                             Énergie
                                                         </label>
+                                                        <div style={{position:"relative", marginTop:"0.6rem"}}>
+                                                            {getEnergy(1, character)}
+                                                            {getEnergy(2, character)}
+                                                            {getEnergy(3, character)}
+                                                            {getEnergy(4, character)}
+                                                            {getEnergy(5, character)}
+                                                            {getEnergy(6, character)}
+                                                            {getEnergy(7, character)}
+                                                            {getEnergy(8, character)}
+                                                        </div>
                                                     </div>
                                                 </div>
 
-                                                <p style={{marginLeft:"1rem", color:"grey"}}><i>1 unité = 1/2 graphiquement</i></p>
+                                                <p style={{marginLeft:"1rem", color:"grey", marginTop:"1.9rem"}}><i>1 unité = 1/2 graphiquement</i></p>
 
                                                 <div className="tw-flex">
                                                     <div className={styles.inputBox} style={{width:"5rem", marginBottom:"1rem", marginTop:"1.5rem"}}>
