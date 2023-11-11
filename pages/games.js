@@ -19,6 +19,7 @@ import HeartHalfLeft from "@/components/svg/heart-lhalf";
 import HeartHalfRight from "@/components/svg/heart-rhalf";
 import EnergyHalfLeft from "@/components/svg/energy-lhalf";
 import EnergyHalfRight from "@/components/svg/energy-rhalf";
+import TextArea from "@/components/textarea";
 
 function makeid(length) {
     let result = '';
@@ -341,11 +342,7 @@ export default function GamesPage() {
                                                             {getEnergy(8, character)}
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <p style={{marginLeft:"1rem", color:"grey", marginTop:"1.9rem"}}><i>1 unité = 1/2 graphiquement</i></p>
-
-                                                <div className="tw-flex">
                                                     <div className={styles.inputBox} style={{width:"5rem", marginBottom:"1rem", marginTop:"1.5rem"}}>
                                                         <Input type="number" name="luck" min="1" max="6"
                                                             value={editedCharacter.luck} regpattern={regexPattern}
@@ -356,6 +353,11 @@ export default function GamesPage() {
                                                         </label>
                                                     </div>
 
+                                                </div>
+
+                                                <p style={{marginLeft:"1rem", color:"grey", marginTop:"1.9rem"}}><i>1 unité = 1/2 graphiquement</i></p>
+
+                                                <div className="tw-flex">
                                                     <div className={styles.inputBox} style={{width:"30rem", marginBottom:"1rem", marginTop:"1.5rem", borderBottom:"none"}}>
                                                         <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mt-4 tw-mr-4"
                                                             onClick={() => {editedCharacter.level > 0 ? (setEditedCharacter({...editedCharacter, level:parseInt(editedCharacter.level)-1, availablePoints:parseInt(editedCharacter.availablePoints)-1})) : (null)}}>
@@ -367,7 +369,7 @@ export default function GamesPage() {
                                                                 }}>
                                                             Augmenter
                                                         </button>
-                                                        <label style={{transform:"translateY(-90%)", left:"3.5%"}}>
+                                                        <label style={{transform:"translateY(-90%)", left:"2%"}}>
                                                             Niveau ({editedCharacter.level} actuel)
                                                         </label>
                                                     </div>
@@ -1129,9 +1131,36 @@ export default function GamesPage() {
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <hr style={{marginLeft:"1.1rem", marginRight:"9rem", marginBottom:"0.75rem", marginTop:"1rem"}}/>
+
+                                                <h1 style={{marginLeft:"1.2rem"}}>Notes</h1>
+                                                <div style={{
+                                                    width: "95%",
+                                                    height: "30vh",
+                                                    background: "transparent",
+                                                    margin: "2.7%",
+                                                    marginLeft: "1.2rem",
+                                                    marginTop:"1.7%"
+                                                }}>
+                                                    <TextArea name="notes" regpattern={regexPattern} value={editedCharacter.notes}
+                                                        onChange={e => setEditedCharacter({...editedCharacter, notes:e.target.value})}
+                                                        wrap="hard" cols="1" style={
+                                                            {padding:"2%", paddingBottom:"0.5%",
+                                                            width:"98%", height:"100%",
+                                                            backgroundColor:"#303030", color:"white",
+                                                            border:"none", outline:"none",
+                                                            fontWeight:500,
+                                                            overflowX: "hidden",
+                                                            overflowY: "auto",
+                                                            borderRadius: "20px",
+                                                            resize:"none"
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
-                                        ) 
-                        
+                                        )
+
                                     case 1:
                                         return (
                                             <div style={{display:"grid", gridTemplateRows:"repeat(2, auto)"}}>
@@ -1212,19 +1241,19 @@ export default function GamesPage() {
                                                 </div>
                                             </div>
                                         )
-                        
+
                                     case 2:
                                         return (
                                             <></>
                                         )
-                        
+
                                     default:
                                         return (
                                             <h1>C'est cassé</h1>
                                         )
                                 }
                             })()}
-                                <button type="submit" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-mt-2">
+                                <button type="submit" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-my-2">
                                     Sauvegarder
                                 </button>
                             </form>
@@ -1298,64 +1327,91 @@ export default function GamesPage() {
                                                 </div>
 
                         <div style={{
-                                                    width: "95%",
-                                                    height: "45vh",
-                                                    background: "#303030",
-                                                    margin: "2.7%",
-                                                    marginLeft: "0.75rem",
-                                                    marginBottom: "2%",
-                                                    overflowX: "hidden",
-                                                    overflowY: "auto",
-                                                    borderRadius: "20px"
-                                                }}>
-                                                    <div style={{display:"grid", gridTemplateRows:"repeat(auto, auto)"}}>
-                                                        {editedGame.inventory.map((item) => {
-                                                            return (
-                                                                <div className="tw-flex" key={item.itemId} style={{borderBottom:"solid 2px #AAAAAA25"}}>
-                                                                    <div className={styles.inputBox} style={{marginLeft:"1.3rem", marginTop:"0.10rem", marginBottom:"0.75rem", width:"15rem"}}>
-                                                                        <Input value={item.name} 
-                                                                        onChange={(e) => {item.name = e.target.value; setEditedGame({...editedGame}); setNeedReload(!needReload)}}/>
-                                                                    </div>
-                                                                    <h1 style={{margin:"1rem 1vh 0 0"}}> x{item.count}</h1>
-                                                                    <div style={{marginTop:"0.7rem"}}>
-                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-4 tw-py-2 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-ml-2"
-                                                                            onClick={() => {
-                                                                                item.count -= 1;
-                                                                                if (item.count <= 0) {
-                                                                                    if (confirm("Supprimer cet objet (" + item.name + ") ?")) {
-                                                                                        var i = 0;
-                                                                                        var newInv = editedGame.inventory;
-                                                                                        while (i != Object.entries(editedGame.inventory).length) {
-                                                                                            if (editedGame.inventory[i].itemId == item.itemId) {
-                                                                                                newInv.splice(i, 1);
-                                                                                                break;
-                                                                                            }
-                                                                                            i++;
-                                                                                        }
-                                                                                        setEditedGame({...editedGame, inventory:newInv})
-                                                                                    } else {
-                                                                                        item.count += 1;
-                                                                                    }
-                                                                                }
-                                                                                setEditedGame({...editedGame});
-                                                                                setNeedReload(!needReload);
-                                                                            }}>
-                                                                            -
-                                                                        </button>
-                                                                        <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-4 tw-py-2 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-ml-2"
-                                                                            onClick={() => {
-                                                                                item.count += 1;
-                                                                                setEditedGame({...editedGame});
-                                                                                setNeedReload(!needReload);
-                                                                            }}>
-                                                                            +
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        })}
-                                                    </div>
-                                                </div>
+                            width: "95%",
+                            height: "45vh",
+                            background: "#303030",
+                            margin: "2.7%",
+                            marginLeft: "0.75rem",
+                            marginBottom: "2%",
+                            overflowX: "hidden",
+                            overflowY: "auto",
+                            borderRadius: "20px"
+                        }}>
+                            <div style={{display:"grid", gridTemplateRows:"repeat(auto, auto)"}}>
+                                {editedGame.inventory.map((item) => {
+                                    return (
+                                        <div className="tw-flex" key={item.itemId} style={{borderBottom:"solid 2px #AAAAAA25"}}>
+                                            <div className={styles.inputBox} style={{marginLeft:"1.3rem", marginTop:"0.10rem", marginBottom:"0.75rem", width:"15rem"}}>
+                                                <Input value={item.name} 
+                                                onChange={(e) => {item.name = e.target.value; setEditedGame({...editedGame}); setNeedReload(!needReload)}}/>
+                                            </div>
+                                            <h1 style={{margin:"1rem 1vh 0 0"}}> x{item.count}</h1>
+                                            <div style={{marginTop:"0.7rem"}}>
+                                                <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-4 tw-py-2 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-ml-2"
+                                                    onClick={() => {
+                                                        item.count -= 1;
+                                                        if (item.count <= 0) {
+                                                            if (confirm("Supprimer cet objet (" + item.name + ") ?")) {
+                                                                var i = 0;
+                                                                var newInv = editedGame.inventory;
+                                                                while (i != Object.entries(editedGame.inventory).length) {
+                                                                    if (editedGame.inventory[i].itemId == item.itemId) {
+                                                                        newInv.splice(i, 1);
+                                                                        break;
+                                                                    }
+                                                                    i++;
+                                                                }
+                                                                setEditedGame({...editedGame, inventory:newInv})
+                                                            } else {
+                                                                item.count += 1;
+                                                            }
+                                                        }
+                                                        setEditedGame({...editedGame});
+                                                        setNeedReload(!needReload);
+                                                    }}>
+                                                    -
+                                                </button>
+                                                <button type="button" className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-4 tw-py-2 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-ml-2"
+                                                    onClick={() => {
+                                                        item.count += 1;
+                                                        setEditedGame({...editedGame});
+                                                        setNeedReload(!needReload);
+                                                    }}>
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+
+                        <hr style={{marginLeft:"1.1rem", marginRight:"9rem", marginBottom:"0.75rem", marginTop:"1rem"}}/>
+
+                        <h1 style={{marginLeft:"1.2rem"}}>Notes</h1>
+                        <div style={{
+                            width: "95%",
+                            height: "30vh",
+                            background: "transparent",
+                            margin: "2.7%",
+                            marginLeft: "0.75rem",
+                            marginTop:"1.7%"
+                        }}>
+                            <TextArea name="notes" regpattern={regexPattern} value={editedGame.notes}
+                                onChange={e => setEditedGame({...editedGame, notes:e.target.value})}
+                                wrap="hard" cols="1" style={
+                                    {padding:"2%", paddingBottom:"0.5%",
+                                    width:"100%", height:"100%",
+                                    backgroundColor:"#303030", color:"white",
+                                    border:"none", outline:"none",
+                                    fontWeight:500,
+                                    overflowX: "hidden",
+                                    overflowY: "auto",
+                                    borderRadius: "20px",
+                                    resize:"none"
+                                }}
+                            />
+                        </div>
 
                         <button className="tw-bg-neutral-700 hover:tw-bg-red-700 tw-text-white tw-px-5 tw-py-1 tw-text-sm tw-transition tw-ease-in-out tw-delay-40 hover:-tw-translate-y-1 hover:tw-scale-110 tw-duration-300 tw-rounded tw-mx-3 tw-mt-1">
                             Sauvegarder
